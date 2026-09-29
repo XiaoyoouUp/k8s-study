@@ -1,0 +1,86 @@
+/* 结业考试：CKA 全真模拟考试（阶段六）
+ * 题目 23 道，按 CKA 考纲权重分布：集群架构 5、工作负载 4、服务与网络 5、存储 3、排障 6。
+ * 操作题 8 道，模拟 CKA 实操风格；资源与命名空间与本站模拟集群（js/lib/mockcluster.js）一致。 */
+export const exam = {
+  id: 'exam-final',
+  stageId: 's6',
+  title: 'CKA 全真模拟考试',
+  duration: 120,
+  passScore: 66,
+  questions: [
+    /* ---------- 集群架构、安装与配置（25% · 5 题） ---------- */
+    { id: 'q-exam-final-1', type: 'single', q: '用户提交了一个新的 Deployment，调度器需要决定把它的 Pod 放到哪个节点。在默认配置下，承担"为 Pod 挑选节点"这一职责的控制平面组件是？', options: ['kube-apiserver', 'etcd', 'kube-scheduler', 'kube-proxy'], answer: [2], explain: '<code>kube-scheduler</code> 负责监视新创建、未绑定节点的 Pod，经过预选过滤与优选打分后为它挑选节点并告知 apiserver 绑定。kube-apiserver 是唯一入口但不做调度决策，etcd 只存数据，kube-proxy 管服务转发。' },
+    { id: 'q-exam-final-2', type: 'single', q: '你在一个 3 控制平面节点的高可用集群上完成了 etcd 快照恢复，集群状态回滚到了快照时间点。为了让所有控制平面成员一致，接下来最关键的动作是？', options: ['在每个控制平面节点上执行相同的恢复流程，并让 etcd/静态 Pod 以新数据目录重启', '只需重启所有 kube-proxy', '用 kubeadm reset 清空整个集群重新建群', '什么都不用做，etcd 会自动向其他成员同步'], answer: [0], explain: '快照恢复会把该节点 etcd 数据回滚到快照点，多成员集群中其他 etcd 成员仍是新数据，必须<strong>在每个控制平面节点执行相同恢复并重启静态 Pod</strong>，否则成员间数据分叉、集群不可用。kube-proxy 与数据回滚无关，reset 重建则过于粗暴且丢数据。' },
+    { id: 'q-exam-final-3', type: 'judge', q: '节点的 bootstrap token 过期后，可以用 kubeadm token create --print-join-command 生成一条可复制的新 join 命令。', options: ['正确', '错误'], answer: [0], explain: '<code>kubeadm token create --print-join-command</code> 会生成包含 token、CA 证书哈希与 API Server 地址的完整 join 命令，直接在 worker 上执行即可重新加入集群，这是 kubeadm 节点管理的高频操作。' },
+    { id: 'q-exam-final-4', type: 'multi', q: '现需要把 worker-1 从 v1.31 升级到 v1.32。下列哪些步骤属于正确流程？', options: ['先执行 kubectl drain worker-1 --ignore-daemonsets 驱逐业务 Pod', '升级 kubeadm 后执行 kubeadm upgrade node，再安装新版 kubelet 和 kubectl', '完成后执行 kubectl uncordon worker-1 恢复调度', '直接 kubectl delete node worker-1，再用旧版 join 命令重新加入'], answer: [0, 1, 2], explain: '标准升级顺序：drain → 升级 kubeadm 并执行 <code>kubeadm upgrade node</code> → 升级 kubelet/kubectl → uncordon。删除节点重新加入虽然"效果类似"，但会重新拉起全部本地状态、耗时且有风险，不是标准升级流程。' },
+    { id: 'q-exam-final-5', type: 'single', q: '新同事 amy 需要查看 study 命名空间里的 Pod，但不能有任何修改权限。按最小权限原则，正确的授权方式是？', options: ['创建 ClusterRole 绑定到 ClusterRoleBinding，授权范围设为全集群只读', '在 study 命名空间创建 Role 并用 RoleBinding 绑定 amy，授予 get/list/watch Pod 权限', '把 cluster-admin 直接绑定给 amy，叮嘱她只看不改', '只创建一个 Role，不创建任何 Binding'], answer: [1], explain: '权限只需要作用于单个命名空间时，<strong>Role + RoleBinding</strong> 就是最小权限实现；ClusterRole/ClusterRoleBinding 是集群级授权，范围过大。cluster-admin 是超级管理员，严重违反最小权限原则。Role 没有 Binding 不会生效，授权链必须是"角色 + 绑定"。' },
+
+    /* ---------- 工作负载与调度（15% · 4 题） ---------- */
+    { id: 'q-exam-final-6', type: 'single', q: '你对 web-ui Deployment 执行了镜像更新，结果新版本 Pod 一直 CrashLoopBackOff，用户正在投诉。让服务最快回到上一稳定版本的一条命令是？', options: ['kubectl rollout restart deployment web-ui', 'kubectl rollout undo deployment web-ui', 'kubectl delete deployment web-ui 后重新创建', 'kubectl scale deployment web-ui --replicas=0'], answer: [1], explain: '<code>kubectl rollout undo</code> 会回滚到上一个 ReplicaSet 的模板版本，是最快的稳定恢复手段。restart 只会以同一份（坏）模板重建 Pod；删除重建既慢又丢失历史版本；缩容到 0 只会让服务完全不可用。' },
+    { id: 'q-exam-final-7', type: 'single', q: '一个 Deployment 有 5 个副本，滚动更新策略为默认的 maxUnavailable=25%。更新过程中最多允许几个副本同时不可用？', options: ['1', '2', '3', '5'], answer: [0], explain: 'maxUnavailable 按百分比向下取整：<code>floor(5 × 25%) = 1</code>，即更新中最多 1 个副本不可用。25% 在不同副本数下取整结果不同（如 3 副本时向下取整为 0），这是常考的取整规则。' },
+    { id: 'q-exam-final-8', type: 'single', q: '应用需要一个数据库连接串，要求：不打进镜像、能随环境变化、且只有当前命名空间的应用能读到。最合适的配置载体是？', options: ['ConfigMap', 'Secret', 'PersistentVolume', '自定义 CRD'], answer: [1], explain: '数据库连接串属于敏感凭据，应使用 <strong>Secret</strong>：独立于镜像、可按命名空间存放、以 env 或 volume 方式注入。ConfigMap 适合非敏感配置；PV 是存储不是配置；CRD 是扩展 API 不是配置载体。' },
+    { id: 'q-exam-final-9', type: 'judge', q: '一个 Pod 同时定义了两个 init 容器，主容器要等这两个 init 容器都成功结束后才会启动。', options: ['正确', '错误'], answer: [0], explain: 'init 容器<strong>按定义顺序串行执行</strong>，全部成功退出后主容器才启动；任何一个失败，Pod 会按 restartPolicy 处理并阻塞主容器。这是初始化依赖（如等数据库就绪、生成配置）的标准机制。' },
+
+    /* ---------- 服务与网络（20% · 5 题） ---------- */
+    { id: 'q-exam-final-10', type: 'single', q: 'nginx-service 创建后无法访问到后端 Pod。执行 kubectl get endpoints nginx-service 发现 ENDPOINTS 一栏为空。最可能的原因是？', options: ['Service 的 selector 与 Pod 的标签不匹配', '必须把 Service 类型改成 LoadBalancer 才有 Endpoint', 'CoreDNS 宕机导致找不到 Pod', 'kube-proxy 的版本太旧'], answer: [0], explain: 'Endpoints 为空说明 <strong>Service 的 selector 没有匹配到任何 Pod 标签</strong>（拼写不一致是最常见原因）。LoadBalancer 是对外暴露方式，与有无 Endpoint 无关；CoreDNS 只影响域名解析不影响 Endpoint 生成；kube-proxy 版本新旧不是空 Endpoint 的典型原因。' },
+    { id: 'q-exam-final-11', type: 'single', q: '在没有云负载均衡器的自建集群里，要把 web-ui 暴露给集群外用户访问，且节点可能随时增减。最合适的 Service 类型是？', options: ['ClusterIP', 'NodePort', 'ExternalName', 'Headless'], answer: [1], explain: '<strong>NodePort</strong> 在每个节点上打开一个端口（默认 30000~32767），外部可通过"任一节点 IP + 端口"访问，节点增减也不影响使用。ClusterIP 只有集群内虚拟 IP；ExternalName 用于映射外部域名；Headless 甚至不分配虚拟 IP，用于直连 Pod。' },
+    { id: 'q-exam-final-12', type: 'single', q: 'default 命名空间里的一个 Pod 想通过集群 DNS 全名访问同命名空间的 nginx-service。正确的 FQDN 是？', options: ['nginx-service.default.cluster.local', 'nginx-service.default.svc.cluster.local', 'nginx-service.svc.default.cluster.local', 'nginx-service.default.pod.cluster.local'], answer: [1], explain: '集群内 Service 的完整域名格式是 <code>&lt;svc&gt;.&lt;namespace&gt;.svc.cluster.local</code>，同命名空间可简写为 nginx-service，跨命名空间至少要写到 <code>nginx-service.default</code>。svc 段固定在命名空间之后，pod 段是 Pod 专用的另一套域名。' },
+    { id: 'q-exam-final-13', type: 'single', q: '安全团队要求：study 命名空间里 app=study-app 的 Pod 只允许被同命名空间的流量访问 8080 端口，其他入站流量一律拒绝。应使用哪种资源实现？', options: ['Ingress', 'NetworkPolicy', 'Role', 'ResourceQuota'], answer: [1], explain: '入站流量隔离用 <strong>NetworkPolicy</strong>：podSelector 选中 app=study-app，ingress 规则只放行同命名空间到 8080 端口的流量。Ingress 管 HTTP 路由入口，Role 管权限，ResourceQuota 管资源配额，都管不了网络可达性。' },
+    { id: 'q-exam-final-14', type: 'judge', q: 'Headless Service（clusterIP 设为 None）不会分配 Cluster VIP，其 DNS 记录会直接解析到各个 Pod 的 IP。', options: ['正确', '错误'], answer: [0], explain: 'Headless Service 不做虚拟 IP 转发，DNS 查询服务名会返回所有就绪 Pod 的 IP 列表（A 记录），客户端直连 Pod。这正是 StatefulSet 需要"稳定网络标识"时搭配 Headless Service 的原因。' },
+
+    /* ---------- 存储（10% · 3 题） ---------- */
+    { id: 'q-exam-final-15', type: 'single', q: '你创建了一个 PVC，它使用的 StorageClass 卷绑定模式是 WaitForFirstConsumer。PVC 创建后一直处于 Pending，而集群里容量充足的 PV 和动态供给都没问题。最可能的原因是？', options: ['还没有任何 Pod 使用这个 PVC，绑定被推迟到第一个消费者出现', 'PVC 的名字太长导致无法绑定', '必须手动把 PV 的 status 改成 Bound', 'PVC 不能与 StorageClass 搭配使用'], answer: [0], explain: 'WaitForFirstConsumer 模式的含义就是<strong>延迟绑定</strong>：等到第一个 Pod 真正调度并需要这个 PVC 时，才结合节点拓扑完成绑定，避免"卷和 Pod 不在同一可用区"。创建一个挂载该 PVC 的 Pod，绑定就会发生。' },
+    { id: 'q-exam-final-16', type: 'single', q: '一个 StatefulSet 数据库集群要求：每个副本都有自己独立的数据卷，Pod 重建后数据仍在。应该在 StatefulSet 中使用什么机制？', options: ['emptyDir', 'hostPath', 'volumeClaimTemplates', 'projected configMap 卷'], answer: [2], explain: '<code>volumeClaimTemplates</code> 会为每个副本自动生成一份独立 PVC（如 study-db-0、study-db-1 各一个），Pod 重建后重新绑定同名 PVC，数据得以保留。emptyDir 随 Pod 删除而清空，hostPath 绑死在具体节点上，configMap 卷放的是配置不是持久数据。' },
+    { id: 'q-exam-final-17', type: 'judge', q: '一个 PV 的访问模式是 RWO（ReadWriteOnce），那么同一个节点上的两个 Pod 也无法同时挂载它。', options: ['正确', '错误'], answer: [1], explain: 'RWO 的限制单位是<strong>节点</strong>而不是 Pod：ReadWriteOnce 表示只能被单个节点以读写方式挂载，同一节点上的多个 Pod 完全可以共享挂载同一个 RWO 卷。禁止跨节点挂载才是 RWO 的本意。' },
+
+    /* ---------- 排障（30% · 6 题） ---------- */
+    { id: 'q-exam-final-18', type: 'single', q: '一个新 Pod 卡在 ImagePullBackOff，kubectl describe pod 显示拉取私有镜像时报 401 Unauthorized。最可能的根因是？', options: ['镜像 tag 写错了', '私有仓库需要认证，而 Pod 没有配置 imagePullSecrets', '节点磁盘空间不足', '该节点的 CNI 插件故障'], answer: [1], explain: '401 Unauthorized 明确指向<strong>认证失败</strong>：私有仓库需要用 <code>imagePullSecrets</code> 提供凭据（或把 secret 挂到 ServiceAccount）。tag 错误通常报 not found/manifest unknown；磁盘不足报磁盘相关事件；CNI 故障影响网络而不是镜像拉取。' },
+    { id: 'q-exam-final-19', type: 'single', q: 'Pod 处于 CrashLoopBackOff，反复重启。要看到上一次容器崩溃前的报错日志，最直接的命令是？', options: ['kubectl logs <pod> --previous', 'kubectl delete pod 让它重新开始', 'kubectl describe node 查看节点日志', '重启该节点的 kubelet'], answer: [0], explain: '<code>kubectl logs &lt;pod&gt; --previous</code> 输出上一次（已崩溃退出）容器的日志，是定位 CrashLoopBackOff 根因的第一步。删除 Pod 会丢掉现场，节点 describe 和 kubelet 重启都看不到容器内的报错。' },
+    { id: 'q-exam-final-20', type: 'single', q: '一个 Pod 一直 Pending，describe 事件显示 "0/3 nodes are available: 3 Insufficient cpu"。合理的处理方式是？', options: ['给 Pod 增加 livenessProbe', '调低容器的 requests，或为集群增加节点资源', '把 Pod 改成 HostNetwork 模式', '删除所有 limits 配置'], answer: [1], explain: 'Insufficient cpu 表示所有节点的可分配 CPU 都满足不了 Pod 的 <code>resources.requests</code>：要么降低 requests（如果原本虚高），要么扩容节点。探针与调度无关；HostNetwork 只解决端口问题不解决 CPU；limits 不参与调度决策，删掉 limits 也无济于事。' },
+    { id: 'q-exam-final-21', type: 'single', q: 'worker-2 状态变为 NotReady，其上的 Pod 全部变成 Unknown。你应该优先检查什么？', options: ['SSH 到 worker-2，检查 kubelet 进程与容器运行时状态', '重启控制平面的 kube-apiserver', 'kubectl delete node worker-2 后立即重新加入', '把所有 Pod 迁移到 control-plane 节点上'], answer: [0], explain: '节点 NotReady 绝大多数是<strong>该节点上的 kubelet 与 API Server 失联</strong>：先 SSH 上去看 kubelet 日志（journalctl -u kubelet）与容器运行时（crictl ps）。apiserver 正常（其他节点仍 Ready）；删节点是最后手段；业务 Pod 不应迁到控制平面。' },
+    { id: 'q-exam-final-22', type: 'multi', q: '怀疑控制平面组件异常，下列哪些是检查其运行状态的有效手段？', options: ['kubectl -n kube-system get pods 查看四个静态 Pod 是否 Running', '在控制平面节点上用 crictl ps 查看容器实际状态', 'kubectl get events -A 关注组件相关异常事件', 'kubectl restart kube-apiserver 重启出问题的组件'], answer: [0, 1, 2], explain: 'kubeadm 集群的控制平面组件以<strong>静态 Pod</strong> 形式运行，查 kube-system 的 Pod、在节点上用 crictl ps、看事件都是有效手段。kubectl 没有 restart 子命令（V1.32 不存在），组件重启靠移动 /etc/kubernetes/manifests 下的清单文件让 kubelet 重新拉起。' },
+    { id: 'q-exam-final-23', type: 'judge', q: 'kubectl get pods -A 显示所有 Pod 都是 Running，就说明集群完全健康、不会有任何问题。', options: ['正确', '错误'], answer: [1], explain: 'Pod Running 只是健康的一部分：还要看节点条件（MemoryPressure/DiskPressure）、组件健康端点（readyz）、证书是否临期、异常事件、探针是否通过等。典型反例：证书过期后 Pod 看似 Running，但整个集群已无法正常操作。' },
+  ],
+  tasks: [
+    { id: 'exam-final-t1', points: 8,
+      text: '将 default 命名空间中的 Deployment nginx-deployment 扩容到 6 个副本。',
+      hint: '使用 kubectl scale，必须带 --replicas=<数量>',
+      solution: ['kubectl scale deployment nginx-deployment --replicas=6'],
+      check: { verb: 'scale', resources: ['deployments'], minNames: 1, namePattern: '^nginx-deployment$', flagsMust: [{ name: 'replicas', equals: '6' }] } },
+    { id: 'exam-final-t2', points: 10,
+      text: 'default 命名空间中的 Deployment nginx-deployment 需要升级：把容器 nginx 的镜像更新为 nginx:1.28，完成后用 rollout status 确认滚动更新完成。',
+      hint: 'kubectl set image deployment/<名称> <容器>=<新镜像>；确认用 rollout status',
+      solution: ['kubectl set image deployment/nginx-deployment nginx=nginx:1.28', 'kubectl rollout status deployment/nginx-deployment'],
+      check: { verb: 'set', sub: 'image', resources: ['deployments'], minNames: 1, namePattern: '^nginx-deployment$' } },
+    { id: 'exam-final-t3', points: 8,
+      text: '在 default 命名空间创建一个名为 study-pod 的 Pod，使用镜像 busybox:1.36，并给它打上标签 env=study（用 kubectl run 直接创建，或先生成清单再 apply 均可）。',
+      hint: 'kubectl run study-pod --image=busybox:1.36 -l env=study',
+      solution: ['kubectl run study-pod --image=busybox:1.36 -l env=study'],
+      check: { verb: 'run', minNames: 1, namePattern: '^study-pod$', flagsMust: [{ name: 'image' }, { name: 'labels' }] } },
+    { id: 'exam-final-t4', points: 12,
+      text: 'worker-1 节点即将进行内核维护。请安全驱逐该节点上的所有业务 Pod：忽略 DaemonSet 管理的 Pod，且不得使用强制删除（--force / --grace-period=0）。',
+      hint: 'kubectl drain worker-1 --ignore-daemonsets',
+      solution: ['kubectl drain worker-1 --ignore-daemonsets'],
+      check: { verb: 'drain', resources: ['nodes'], minNames: 1, namePattern: '^worker-1$', flagsMust: [{ name: 'ignore-daemonsets' }], flagsMustNot: ['force', 'grace-period=0'] } },
+    { id: 'exam-final-t5', points: 10,
+      text: '给节点 worker-2 打上污点 node-type=study:NoSchedule，使新的业务 Pod 默认不再调度到该节点。',
+      hint: 'kubectl taint nodes <节点> <键>=<值>:<effect>',
+      solution: ['kubectl taint nodes worker-2 node-type=study:NoSchedule'],
+      check: { verb: 'taint', resources: ['nodes'], minNames: 1, namePattern: '^worker-2$' } },
+    { id: 'exam-final-t6', points: 12,
+      text: '在 default 命名空间交付一个小应用：创建 Deployment study-front（镜像 nginx:1.27、2 个副本）以及 ClusterIP 型 Service study-front-svc（端口 80 指向容器 80）。请把两份清单写入一个 YAML 文件（如 /tmp/t6.yaml）后用 kubectl apply -f 一次性应用。',
+      hint: 'kubectl create deployment study-front --image=nginx:1.27 --dry-run=client -o yaml 生成骨架，补齐副本数与 Service 后 apply -f',
+      solution: ['kubectl apply -f /tmp/t6.yaml'],
+      check: { verb: 'apply', flagsMust: [{ name: 'filename' }] } },
+    { id: 'exam-final-t7', points: 8,
+      text: 'default 命名空间中的 Pod web-ui-5c8d7b6f4-pqrst 正在被排查。输出它最近 20 行日志。',
+      hint: 'kubectl logs <pod> --tail=20',
+      solution: ['kubectl logs web-ui-5c8d7b6f4-pqrst --tail=20'],
+      check: { verb: 'logs', resources: ['pods'], minNames: 1, namePattern: '^web-ui-5c8d7b6f4-pqrst$', flagsMust: [{ name: 'tail', equals: '20' }] } },
+    { id: 'exam-final-t8', points: 10,
+      text: 'study 命名空间中的 Pod study-app-6d9f8b7c5-aaaaaa 需要现场检查：进入该 Pod 的容器执行命令 hostname，拿到容器的主机名输出。',
+      hint: 'kubectl exec -n study <pod> -- hostname（exec 后必须用 -- 分隔命令）',
+      solution: ['kubectl exec -n study study-app-6d9f8b7c5-aaaaaa -- hostname'],
+      check: { verb: 'exec', resources: ['pods'], minNames: 1, namePattern: '^study-app-6d9f8b7c5-aaaaaa$', namespace: 'study' } },
+  ],
+};

@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="430" viewBox="0 0 860 430" font-family="'PingFang SC','Microsoft YaHei',sans-serif">
+  <rect width="860" height="430" fill="#ffffff"/>
+  <text x="30" y="36" font-size="15" font-weight="bold" fill="#0d1b2e">CKA 考试环境示意（PSI 远程桌面 + 多集群上下文）</text>
+
+  <!-- 远程桌面 -->
+  <rect x="30" y="60" width="560" height="330" rx="10" fill="#E8F0FE" stroke="#7b8ca0" stroke-width="1.5"/>
+  <text x="46" y="86" font-size="13" font-weight="bold" fill="#0d1b2e">远程 Ubuntu 桌面（监考软件锁定）</text>
+
+  <!-- 终端 -->
+  <rect x="50" y="100" width="320" height="180" rx="8" fill="#0d1b2e"/>
+  <text x="66" y="130" font-size="12" fill="#9ae6b4" font-family="'Consolas','Courier New',monospace">$ kubectl config use-context cluster-a</text>
+  <text x="66" y="154" font-size="12" fill="#9ae6b4" font-family="'Consolas','Courier New',monospace">$ kubectl get pods</text>
+  <text x="66" y="178" font-size="12" fill="#c9d6e3" font-family="'Consolas','Courier New',monospace">NAME            READY   STATUS</text>
+  <text x="66" y="202" font-size="12" fill="#c9d6e3" font-family="'Consolas','Courier New',monospace">web-ui-5c8d7…   1/1     Running</text>
+  <text x="66" y="240" font-size="12" fill="#ffffff">终端：所有任务都在这里完成</text>
+  <text x="66" y="262" font-size="12" fill="#c9d6e3">kubectl / vim / etcdctl / journalctl</text>
+
+  <!-- 受限浏览器 -->
+  <rect x="390" y="100" width="180" height="110" rx="8" fill="#ffffff" stroke="#326CE5" stroke-width="1.5"/>
+  <text x="406" y="126" font-size="13" font-weight="bold" fill="#0d1b2e">受限浏览器</text>
+  <text x="406" y="150" font-size="12" fill="#7b8ca0">仅允许访问：</text>
+  <text x="406" y="172" font-size="12" font-weight="bold" fill="#326CE5">kubernetes.io/docs</text>
+  <text x="406" y="194" font-size="11" fill="#7b8ca0">其余网站一律禁用</text>
+
+  <!-- 记事本 -->
+  <rect x="390" y="230" width="180" height="50" rx="8" fill="#ffffff" stroke="#7b8ca0" stroke-width="1.5"/>
+  <text x="406" y="251" font-size="13" font-weight="bold" fill="#0d1b2e">内置记事本</text>
+  <text x="406" y="271" font-size="11" fill="#7b8ca0">记录上下文名 / 未做题</text>
+
+  <!-- 右侧集群列表 -->
+  <text x="620" y="86" font-size="13" font-weight="bold" fill="#0d1b2e">多个集群 · 每题一个</text>
+  <rect x="620" y="100" width="210" height="80" rx="8" fill="#326CE5"/>
+  <text x="636" y="128" font-size="13" fill="#ffffff">集群 A：1 control-plane</text>
+  <text x="636" y="152" font-size="12" fill="#dbe7fb">context: cluster-a</text>
+  <rect x="620" y="200" width="210" height="80" rx="8" fill="#326CE5"/>
+  <text x="636" y="228" font-size="13" fill="#ffffff">集群 B：1 cp + 2 worker</text>
+  <text x="636" y="252" font-size="12" fill="#dbe7fb">context: cluster-b</text>
+  <rect x="620" y="300" width="210" height="80" rx="8" fill="#326CE5"/>
+  <text x="636" y="328" font-size="13" fill="#ffffff">集群 C：按题目指定</text>
+  <text x="636" y="352" font-size="12" fill="#dbe7fb">先切 context，再动手</text>
+
+  <text x="430" y="418" font-size="13" font-weight="bold" fill="#c53030" text-anchor="middle">每题第一步：kubectl config use-context &lt;context&gt;，动手前核对 current-context</text>
+</svg>

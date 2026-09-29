@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 560" font-family="'PingFang SC','Microsoft YaHei',sans-serif">
+  <rect width="860" height="560" fill="#ffffff" rx="12"/>
+  <defs><marker id="a" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#7b8ca0"/></marker></defs>
+
+  <rect x="40" y="30" width="780" height="250" rx="10" fill="#f5f8fc" stroke="#326CE5" stroke-dasharray="5 4"/>
+  <text x="60" y="58" font-size="15" font-weight="bold" fill="#1b4aa8">控制平面 Control Plane（主节点）</text>
+
+  <rect x="330" y="72" width="220" height="52" rx="8" fill="#326CE5"/>
+  <text x="440" y="94" text-anchor="middle" font-size="14" font-weight="bold" fill="#ffffff">kube-apiserver</text>
+  <text x="440" y="112" text-anchor="middle" font-size="11" fill="#dbe7ff">唯一入口 · 认证/鉴权/准入</text>
+
+  <rect x="70" y="150" width="200" height="52" rx="8" fill="#ffffff" stroke="#326CE5"/>
+  <text x="170" y="172" text-anchor="middle" font-size="13" font-weight="bold" fill="#1c2733">etcd</text>
+  <text x="170" y="190" text-anchor="middle" font-size="11" fill="#7b8ca0">存储全部集群状态（键值库）</text>
+
+  <rect x="340" y="150" width="200" height="52" rx="8" fill="#ffffff" stroke="#326CE5"/>
+  <text x="440" y="172" text-anchor="middle" font-size="13" font-weight="bold" fill="#1c2733">kube-scheduler</text>
+  <text x="440" y="190" text-anchor="middle" font-size="11" fill="#7b8ca0">为 Pod 挑选合适的节点</text>
+
+  <rect x="610" y="150" width="200" height="52" rx="8" fill="#ffffff" stroke="#326CE5"/>
+  <text x="710" y="172" text-anchor="middle" font-size="13" font-weight="bold" fill="#1c2733">kube-controller-manager</text>
+  <text x="710" y="190" text-anchor="middle" font-size="11" fill="#7b8ca0">控制器集合 · 让实际状态趋近期望</text>
+
+  <line x1="170" y1="150" x2="330" y2="105" stroke="#7b8ca0" stroke-width="1.5" marker-end="url(#a)"/>
+  <line x1="440" y1="124" x2="440" y2="148" stroke="#7b8ca0" stroke-width="1.5" marker-end="url(#a)"/>
+  <line x1="560" y1="105" x2="680" y2="148" stroke="#7b8ca0" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <rect x="40" y="300" width="370" height="210" rx="10" fill="#f5f8fc" stroke="#148a5c" stroke-dasharray="5 4"/>
+  <text x="60" y="328" font-size="15" font-weight="bold" fill="#148a5c">工作节点 worker-1</text>
+  <rect x="70" y="345" width="120" height="40" rx="6" fill="#E8F0FE" stroke="#326CE5"/>
+  <text x="130" y="370" text-anchor="middle" font-size="12" fill="#1c2733">Pod A</text>
+  <rect x="205" y="345" width="120" height="40" rx="6" fill="#E8F0FE" stroke="#326CE5"/>
+  <text x="265" y="370" text-anchor="middle" font-size="12" fill="#1c2733">Pod B</text>
+  <rect x="70" y="402" width="255" height="44" rx="6" fill="#ffffff" stroke="#326CE5"/>
+  <text x="197" y="421" text-anchor="middle" font-size="13" font-weight="bold" fill="#1c2733">kubelet</text>
+  <text x="197" y="438" text-anchor="middle" font-size="11" fill="#7b8ca0">节点代理 · 管理容器生命周期</text>
+  <rect x="70" y="456" width="255" height="44" rx="6" fill="#ffffff" stroke="#326CE5"/>
+  <text x="197" y="475" text-anchor="middle" font-size="13" font-weight="bold" fill="#1c2733">kube-proxy</text>
+  <text x="197" y="492" text-anchor="middle" font-size="11" fill="#7b8ca0">Service 转发规则（iptables/IPVS）</text>
+
+  <rect x="450" y="300" width="370" height="210" rx="10" fill="#f5f8fc" stroke="#148a5c" stroke-dasharray="5 4"/>
+  <text x="470" y="328" font-size="15" font-weight="bold" fill="#148a5c">工作节点 worker-2</text>
+  <rect x="480" y="345" width="120" height="40" rx="6" fill="#E8F0FE" stroke="#326CE5"/>
+  <text x="540" y="370" text-anchor="middle" font-size="12" fill="#1c2733">Pod C</text>
+  <rect x="615" y="345" width="120" height="40" rx="6" fill="#E8F0FE" stroke="#326CE5"/>
+  <text x="675" y="370" text-anchor="middle" font-size="12" fill="#1c2733">Pod D</text>
+  <rect x="480" y="402" width="255" height="44" rx="6" fill="#ffffff" stroke="#326CE5"/>
+  <text x="607" y="421" text-anchor="middle" font-size="13" font-weight="bold" fill="#1c2733">kubelet + 容器运行时</text>
+  <text x="607" y="438" text-anchor="middle" font-size="11" fill="#7b8ca0">containerd 通过 CRI 拉镜像/运行容器</text>
+  <rect x="480" y="456" width="255" height="44" rx="6" fill="#ffffff" stroke="#326CE5"/>
+  <text x="607" y="475" text-anchor="middle" font-size="13" font-weight="bold" fill="#1c2733">kube-proxy</text>
+  <text x="607" y="492" text-anchor="middle" font-size="11" fill="#7b8ca0">同上，每个节点一份</text>
+
+  <rect x="120" y="84" width="120" height="30" rx="15" fill="#0d1b2e"/>
+  <text x="180" y="104" text-anchor="middle" font-size="12" fill="#ffffff">kubectl / 用户</text>
+  <line x1="240" y1="99" x2="326" y2="99" stroke="#0d1b2e" stroke-width="1.5" marker-end="url(#a)"/>
+  <text x="430" y="546" text-anchor="middle" font-size="12" fill="#7b8ca0">apiserver 是唯一入口：kubectl、kubelet、控制器都只与它通信；状态统一存入 etcd</text>
+</svg>

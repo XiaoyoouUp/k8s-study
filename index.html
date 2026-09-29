@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>K8s 学练营 — Kubernetes 系统化学习与 CKA 认证备考</title>
+  <meta name="description" content="Kubernetes 系统化学习网站：图文课程、阶段测验与考试、kubectl 在线命令练习，对标 CKA 认证。">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpolygon points='50,4 92,27 92,73 50,96 8,73 8,27' fill='%23326CE5'/%3E%3Ccircle cx='50' cy='50' r='17' fill='none' stroke='white' stroke-width='7'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+  <div id="app">
+    <aside id="sidebar" aria-label="课程导航">
+      <a class="brand" href="#/">
+        <svg viewBox="0 0 100 100" width="30" height="30" aria-hidden="true"><polygon points="50,4 92,27 92,73 50,96 8,73 8,27" fill="#326CE5"/><circle cx="50" cy="50" r="17" fill="none" stroke="#fff" stroke-width="7"/></svg>
+        <span>K8s 学练营</span>
+      </a>
+      <nav id="nav"></nav>
+      <div id="nav-progress" class="nav-progress"></div>
+    </aside>
+    <div id="main-wrap">
+      <header id="topbar">
+        <button id="menu-btn" aria-label="打开导航">☰</button>
+        <div id="breadcrumb"></div>
+        <div id="topbar-right"><span class="exam-badge" title="对标 CNCF CKA 考纲">CKA 备考</span></div>
+      </header>
+      <main id="content" tabindex="-1"></main>
+      <footer id="footer">
+        <p>K8s 学练营 · 课程内容基于 Kubernetes 官方文档与 CNCF 认证考纲整理，仅供学习参考 · Kubernetes 与 CKA 为 CNCF/Linux 基金会商标</p>
+      </footer>
+    </div>
+  </div>
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 320" font-family="'PingFang SC','Microsoft YaHei',sans-serif">
+  <rect width="860" height="320" fill="#ffffff" rx="12"/>
+  <text x="215" y="34" text-anchor="middle" font-size="15" font-weight="bold" fill="#0d1b2e">虚拟机</text>
+  <rect x="65" y="50" width="90" height="42" rx="6" fill="#E8F0FE" stroke="#326CE5"/>
+  <text x="110" y="76" text-anchor="middle" font-size="13" fill="#1c2733">应用 A</text>
+  <rect x="170" y="50" width="90" height="42" rx="6" fill="#E8F0FE" stroke="#326CE5"/>
+  <text x="215" y="76" text-anchor="middle" font-size="13" fill="#1c2733">应用 B</text>
+  <rect x="65" y="106" width="90" height="42" rx="6" fill="#fdf1e0" stroke="#a15c00"/>
+  <text x="110" y="126" text-anchor="middle" font-size="12" fill="#a15c00">客户操作系统</text>
+  <text x="110" y="142" text-anchor="middle" font-size="10" fill="#a15c00">完整内核</text>
+  <rect x="170" y="106" width="90" height="42" rx="6" fill="#fdf1e0" stroke="#a15c00"/>
+  <text x="215" y="126" text-anchor="middle" font-size="12" fill="#a15c00">客户操作系统</text>
+  <text x="215" y="142" text-anchor="middle" font-size="10" fill="#a15c00">完整内核</text>
+  <rect x="65" y="162" width="195" height="40" rx="6" fill="#f0f2f7" stroke="#7b8ca0"/>
+  <text x="162" y="187" text-anchor="middle" font-size="13" fill="#46586b">Hypervisor</text>
+  <rect x="65" y="216" width="195" height="40" rx="6" fill="#0d1b2e"/>
+  <text x="162" y="241" text-anchor="middle" font-size="13" fill="#ffffff">物理硬件</text>
+
+  <text x="620" y="34" text-anchor="middle" font-size="15" font-weight="bold" fill="#0d1b2e">容器</text>
+  <rect x="500" y="50" width="80" height="42" rx="6" fill="#E8F0FE" stroke="#326CE5"/>
+  <text x="540" y="76" text-anchor="middle" font-size="13" fill="#1c2733">应用 A</text>
+  <rect x="590" y="50" width="80" height="42" rx="6" fill="#E8F0FE" stroke="#326CE5"/>
+  <text x="630" y="76" text-anchor="middle" font-size="13" fill="#1c2733">应用 B</text>
+  <rect x="680" y="50" width="80" height="42" rx="6" fill="#E8F0FE" stroke="#326CE5"/>
+  <text x="720" y="76" text-anchor="middle" font-size="13" fill="#1c2733">应用 C</text>
+  <rect x="500" y="106" width="260" height="42" rx="6" fill="#e2f4ea" stroke="#148a5c"/>
+  <text x="630" y="126" text-anchor="middle" font-size="12" fill="#148a5c">二进制 / 库 / 依赖（随镜像打包）</text>
+  <text x="630" y="142" text-anchor="middle" font-size="10" fill="#148a5c">共享宿主机内核，namespace 隔离</text>
+  <rect x="500" y="162" width="260" height="40" rx="6" fill="#dbe7ff" stroke="#326CE5"/>
+  <text x="630" y="187" text-anchor="middle" font-size="13" fill="#1b4aa8">容器运行时（containerd 等）</text>
+  <rect x="500" y="216" width="260" height="40" rx="6" fill="#0d1b2e"/>
+  <text x="630" y="241" text-anchor="middle" font-size="13" fill="#ffffff">宿主机操作系统 + 物理硬件</text>
+
+  <line x1="300" y1="150" x2="470" y2="150" stroke="#7b8ca0" stroke-width="1.5" marker-end="url(#arr)"/>
+  <defs>
+    <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#7b8ca0"/></marker>
+  </defs>
+  <text x="385" y="140" text-anchor="middle" font-size="12" fill="#7b8ca0">更轻 / 更快</text>
+  <text x="430" y="296" text-anchor="middle" font-size="12" fill="#7b8ca0">虚拟机隔离硬件（各自内核）；容器隔离进程视图（共享内核）</text>
+</svg>

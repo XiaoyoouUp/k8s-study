@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 560" font-family="'PingFang SC','Microsoft YaHei',sans-serif">
+  <rect width="860" height="560" fill="#ffffff" rx="12"/>
+  <defs><marker id="a" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#7b8ca0"/></marker></defs>
+
+  <rect x="330" y="26" width="200" height="44" rx="8" fill="#0d1b2e"/>
+  <text x="430" y="54" text-anchor="middle" font-size="14" font-weight="bold" fill="#ffffff">Pod 异常：先 kubectl get pods</text>
+
+  <rect x="60" y="110" width="220" height="150" rx="8" fill="#f5f8fc" stroke="#a15c00"/>
+  <text x="170" y="136" text-anchor="middle" font-size="13" font-weight="bold" fill="#a15c00">Pending</text>
+  <text x="170" y="158" text-anchor="middle" font-size="11" fill="#46586b">调度不下去 / 没起来</text>
+  <text x="80" y="184" font-size="11" fill="#1c2733">• 资源不足：看 FailedScheduling 事件</text>
+  <text x="80" y="204" font-size="11" fill="#1c2733">• PVC 未绑定：kubectl get pvc</text>
+  <text x="80" y="224" font-size="11" fill="#1c2733">• 亲和/污点冲突：核对节点标签</text>
+  <text x="80" y="244" font-size="11" fill="#7b8ca0">kubectl describe pod &lt;名&gt;</text>
+
+  <rect x="320" y="110" width="220" height="150" rx="8" fill="#f5f8fc" stroke="#c53030"/>
+  <text x="430" y="136" text-anchor="middle" font-size="13" font-weight="bold" fill="#c53030">ImagePullBackOff</text>
+  <text x="430" y="158" text-anchor="middle" font-size="11" fill="#46586b">镜像拉取失败</text>
+  <text x="340" y="184" font-size="11" fill="#1c2733">• 镜像名/标签拼错（最常见）</text>
+  <text x="340" y="204" font-size="11" fill="#1c2733">• 私有仓库缺 imagePullSecrets</text>
+  <text x="340" y="224" font-size="11" fill="#1c2733">• 仓库不可达/无网络</text>
+  <text x="340" y="244" font-size="11" fill="#7b8ca0">describe 看 Events 里的具体报错</text>
+
+  <rect x="580" y="110" width="220" height="150" rx="8" fill="#f5f8fc" stroke="#c53030"/>
+  <text x="690" y="136" text-anchor="middle" font-size="13" font-weight="bold" fill="#c53030">CrashLoopBackOff</text>
+  <text x="690" y="158" text-anchor="middle" font-size="11" fill="#46586b">反复崩溃重启</text>
+  <text x="600" y="184" font-size="11" fill="#1c2733">• 看当前日志：kubectl logs</text>
+  <text x="600" y="204" font-size="11" fill="#1c2733">• 看上次日志：kubectl logs -p</text>
+  <text x="600" y="224" font-size="11" fill="#1c2733">• OOMKilled → 调大 memory limit</text>
+  <text x="600" y="244" font-size="11" fill="#1c2733">• command/args 配置错误</text>
+
+  <line x1="430" y1="70" x2="190" y2="106" stroke="#7b8ca0" stroke-width="1.5" marker-end="url(#a)"/>
+  <line x1="430" y1="70" x2="430" y2="106" stroke="#7b8ca0" stroke-width="1.5" marker-end="url(#a)"/>
+  <line x1="430" y1="70" x2="670" y2="106" stroke="#7b8ca0" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <rect x="190" y="310" width="480" height="110" rx="8" fill="#e2f4ea" stroke="#148a5c"/>
+  <text x="430" y="336" text-anchor="middle" font-size="13" font-weight="bold" fill="#148a5c">Running 但应用不可达</text>
+  <text x="430" y="360" text-anchor="middle" font-size="11" fill="#1c2733">① 就绪探针失败？ ② Service selector 与 Pod 标签匹配？ ③ Endpoints 是否为空？</text>
+  <text x="430" y="382" text-anchor="middle" font-size="11" fill="#1c2733">kubectl get endpoints &lt;svc&gt;　kubectl describe svc　kubectl get pod --show-labels</text>
+  <text x="430" y="404" text-anchor="middle" font-size="11" fill="#1c2733">④ NetworkPolicy 拦截？ ⑤ 容器端口与 targetPort 一致？</text>
+
+  <line x1="170" y1="260" x2="330" y2="306" stroke="#7b8ca0" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#a)"/>
+  <line x1="690" y1="260" x2="530" y2="306" stroke="#7b8ca0" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#a)"/>
+
+  <text x="430" y="452" text-anchor="middle" font-size="12" fill="#7b8ca0">排障三板斧：kubectl describe（事件）→ kubectl logs（日志）→ kubectl exec（进入现场）</text>
+  <text x="430" y="478" text-anchor="middle" font-size="12" fill="#7b8ca0">集群组件故障 → 看 /var/log/pods 与 journalctl -u kubelet；apiserver 挂了 kubectl 全部超时</text>
+  <text x="430" y="520" text-anchor="middle" font-size="12" fill="#7b8ca0">通用顺序：从现象（Pod 状态）定位到层（调度/镜像/运行时/应用/网络），再逐层取证</text>
+</svg>

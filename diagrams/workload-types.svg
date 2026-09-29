@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 470" font-family="'PingFang SC','Microsoft YaHei',sans-serif">
+  <rect width="860" height="470" fill="#ffffff" rx="12"/>
+  <defs><marker id="a" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#7b8ca0"/></marker></defs>
+
+  <rect x="40" y="40" width="240" height="180" rx="10" fill="#f5f8fc" stroke="#326CE5"/>
+  <text x="160" y="66" text-anchor="middle" font-size="14" font-weight="bold" fill="#1b4aa8">Deployment</text>
+  <text x="160" y="88" text-anchor="middle" font-size="11" fill="#46586b">无状态 · 多副本 · 滚动更新</text>
+  <rect x="70" y="104" width="54" height="30" rx="5" fill="#E8F0FE" stroke="#326CE5"/><text x="97" y="124" text-anchor="middle" font-size="10" fill="#1b4aa8">Pod</text>
+  <rect x="134" y="104" width="54" height="30" rx="5" fill="#E8F0FE" stroke="#326CE5"/><text x="161" y="124" text-anchor="middle" font-size="10" fill="#1b4aa8">Pod</text>
+  <rect x="198" y="104" width="54" height="30" rx="5" fill="#E8F0FE" stroke="#326CE5"/><text x="225" y="124" text-anchor="middle" font-size="10" fill="#1b4aa8">Pod</text>
+  <text x="160" y="170" text-anchor="middle" font-size="11" fill="#7b8ca0">典型：Web 前端、API 服务</text>
+  <text x="160" y="194" text-anchor="middle" font-size="11" fill="#7b8ca0">Pod 名随机、地位对等</text>
+
+  <rect x="310" y="40" width="240" height="180" rx="10" fill="#f5f8fc" stroke="#148a5c"/>
+  <text x="430" y="66" text-anchor="middle" font-size="14" font-weight="bold" fill="#148a5c">StatefulSet</text>
+  <text x="430" y="88" text-anchor="middle" font-size="11" fill="#46586b">稳定标识 · 有序部署 · 持久存储</text>
+  <rect x="340" y="104" width="54" height="30" rx="5" fill="#e2f4ea" stroke="#148a5c"/><text x="367" y="124" text-anchor="middle" font-size="10" fill="#148a5c">db-0</text>
+  <rect x="404" y="104" width="54" height="30" rx="5" fill="#e2f4ea" stroke="#148a5c"/><text x="431" y="124" text-anchor="middle" font-size="10" fill="#148a5c">db-1</text>
+  <rect x="468" y="104" width="54" height="30" rx="5" fill="#e2f4ea" stroke="#148a5c"/><text x="495" y="124" text-anchor="middle" font-size="10" fill="#148a5c">db-2</text>
+  <text x="430" y="170" text-anchor="middle" font-size="11" fill="#7b8ca0">典型：数据库、消息队列</text>
+  <text x="430" y="194" text-anchor="middle" font-size="11" fill="#7b8ca0">固定名 + 专属 PVC</text>
+
+  <rect x="580" y="40" width="240" height="180" rx="10" fill="#f5f8fc" stroke="#a15c00"/>
+  <text x="700" y="66" text-anchor="middle" font-size="14" font-weight="bold" fill="#a15c00">DaemonSet</text>
+  <text x="700" y="88" text-anchor="middle" font-size="11" fill="#46586b">每个节点恰好一个</text>
+  <rect x="610" y="104" width="54" height="30" rx="5" fill="#fdf1e0" stroke="#a15c00"/><text x="637" y="124" text-anchor="middle" font-size="10" fill="#a15c00">node-1</text>
+  <rect x="674" y="104" width="54" height="30" rx="5" fill="#fdf1e0" stroke="#a15c00"/><text x="701" y="124" text-anchor="middle" font-size="10" fill="#a15c00">node-2</text>
+  <rect x="738" y="104" width="54" height="30" rx="5" fill="#fdf1e0" stroke="#a15c00"/><text x="765" y="124" text-anchor="middle" font-size="10" fill="#a15c00">node-3</text>
+  <text x="700" y="170" text-anchor="middle" font-size="11" fill="#7b8ca0">典型：日志收集、监控代理</text>
+  <text x="700" y="194" text-anchor="middle" font-size="11" fill="#7b8ca0">kube-proxy / CNI 也是它</text>
+
+  <rect x="120" y="260" width="280" height="160" rx="10" fill="#f5f8fc" stroke="#c53030"/>
+  <text x="260" y="286" text-anchor="middle" font-size="14" font-weight="bold" fill="#c53030">Job</text>
+  <text x="260" y="308" text-anchor="middle" font-size="11" fill="#46586b">一次性任务 · 跑完即止</text>
+  <rect x="180" y="324" width="54" height="30" rx="5" fill="#fdecec" stroke="#c53030"/><text x="207" y="344" text-anchor="middle" font-size="10" fill="#c53030">✓ 完成</text>
+  <text x="260" y="388" text-anchor="middle" font-size="11" fill="#7b8ca0">典型：数据迁移、批处理</text>
+  <text x="260" y="408" text-anchor="middle" font-size="11" fill="#7b8ca0">completions / parallelism / backoffLimit</text>
+
+  <rect x="460" y="260" width="280" height="160" rx="10" fill="#f5f8fc" stroke="#0d1b2e"/>
+  <text x="600" y="286" text-anchor="middle" font-size="14" font-weight="bold" fill="#0d1b2e">CronJob</text>
+  <text x="600" y="308" text-anchor="middle" font-size="11" fill="#46586b">定时创建 Job</text>
+  <rect x="510" y="324" width="180" height="30" rx="5" fill="#eef2f7" stroke="#7b8ca0"/>
+  <text x="600" y="344" text-anchor="middle" font-size="10" fill="#46586b">schedule: "0 2 * * *"</text>
+  <text x="600" y="388" text-anchor="middle" font-size="11" fill="#7b8ca0">典型：定时备份、报表生成</text>
+  <text x="600" y="408" text-anchor="middle" font-size="11" fill="#7b8ca0">concurrencyPolicy 控制并发策略</text>
+
+  <text x="430" y="452" text-anchor="middle" font-size="11" fill="#7b8ca0">选型口诀：无状态用 Deployment，有状态用 StatefulSet，每节点一份用 DaemonSet，跑批用 Job/CronJob</text>
+</svg>

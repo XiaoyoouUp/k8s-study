@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 480" font-family="'PingFang SC','Microsoft YaHei',sans-serif">
+  <rect width="860" height="480" fill="#ffffff" rx="12"/>
+  <defs><marker id="a" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#7b8ca0"/></marker></defs>
+
+  <text x="430" y="30" text-anchor="middle" font-size="15" font-weight="bold" fill="#0d1b2e">把流量从外部送进集群的四种方式</text>
+
+  <rect x="40" y="50" width="780" height="88" rx="10" fill="#f5f8fc" stroke="#a15c00" stroke-dasharray="5 4"/>
+  <text x="60" y="76" font-size="13" font-weight="bold" fill="#a15c00">Ingress（七层 · 推荐）</text>
+  <rect x="360" y="60" width="160" height="34" rx="6" fill="#fdf1e0" stroke="#a15c00"/>
+  <text x="440" y="82" text-anchor="middle" font-size="12" fill="#a15c00">Ingress Controller (Nginx)</text>
+  <text x="240" y="82" font-size="11" fill="#46586b">web.example.com/api → svc-a</text>
+  <text x="240" y="100" font-size="11" fill="#46586b">web.example.com/img → svc-b</text>
+  <text x="640" y="82" font-size="11" fill="#7b8ca0">按域名/路径路由，统一 TLS 终止</text>
+  <line x1="600" y1="77" x2="620" y2="77" stroke="#7b8ca0" stroke-width="1.5"/>
+
+  <rect x="40" y="158" width="250" height="140" rx="10" fill="#f5f8fc" stroke="#326CE5"/>
+  <text x="165" y="184" text-anchor="middle" font-size="13" font-weight="bold" fill="#1b4aa8">ClusterIP（默认）</text>
+  <rect x="90" y="204" width="150" height="32" rx="6" fill="#E8F0FE" stroke="#326CE5"/>
+  <text x="165" y="225" text-anchor="middle" font-size="12" fill="#1b4aa8">VIP 10.96.x.x</text>
+  <text x="165" y="262" text-anchor="middle" font-size="11" fill="#7b8ca0">仅集群内部可达</text>
+  <text x="165" y="282" text-anchor="middle" font-size="11" fill="#7b8ca0">微服务互访的基础</text>
+
+  <rect x="310" y="158" width="250" height="140" rx="10" fill="#f5f8fc" stroke="#148a5c"/>
+  <text x="435" y="184" text-anchor="middle" font-size="13" font-weight="bold" fill="#148a5c">NodePort</text>
+  <rect x="345" y="204" width="180" height="32" rx="6" fill="#e2f4ea" stroke="#148a5c"/>
+  <text x="435" y="225" text-anchor="middle" font-size="12" fill="#148a5c">任意节点IP:30000-32767</text>
+  <text x="435" y="262" text-anchor="middle" font-size="11" fill="#7b8ca0">外部 → 节点端口 → Service</text>
+  <text x="435" y="282" text-anchor="middle" font-size="11" fill="#7b8ca0">测试/演示常用，端口难管理</text>
+
+  <rect x="580" y="158" width="240" height="140" rx="10" fill="#f5f8fc" stroke="#0d1b2e"/>
+  <text x="700" y="184" text-anchor="middle" font-size="13" font-weight="bold" fill="#0d1b2e">LoadBalancer</text>
+  <rect x="610" y="204" width="180" height="32" rx="6" fill="#eef2f7" stroke="#0d1b2e"/>
+  <text x="700" y="225" text-anchor="middle" font-size="12" fill="#0d1b2e">云 LB 公网 IP</text>
+  <text x="700" y="262" text-anchor="middle" font-size="11" fill="#7b8ca0">云厂商自动创建负载均衡器</text>
+  <text x="700" y="282" text-anchor="middle" font-size="11" fill="#7b8ca0">每个 Service 一个 LB，成本高</text>
+
+  <rect x="40" y="322" width="780" height="60" rx="10" fill="#0d1b2e"/>
+  <text x="70" y="358" font-size="13" fill="#9fd0ff">ExternalName：</text>
+  <text x="190" y="358" font-size="12" fill="#dbe7ff">返回 DNS CNAME，把集群内名字映射到外部域名（db.example.com），不代理流量</text>
+
+  <text x="430" y="420" text-anchor="middle" font-size="12" fill="#7b8ca0">选型：内部互访 ClusterIP；快速验证 NodePort；云上一个入口 LoadBalancer；多域名/多服务收敛用 Ingress</text>
+  <text x="430" y="448" text-anchor="middle" font-size="12" fill="#7b8ca0">Ingress 本身只是规则，必须有 Ingress Controller 才生效</text>
+</svg>

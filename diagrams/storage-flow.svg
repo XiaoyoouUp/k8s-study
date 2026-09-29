@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 400" font-family="'PingFang SC','Microsoft YaHei',sans-serif">
+  <rect width="860" height="400" fill="#ffffff" rx="12"/>
+  <defs><marker id="a" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#7b8ca0"/></marker></defs>
+
+  <text x="430" y="34" text-anchor="middle" font-size="15" font-weight="bold" fill="#0d1b2e">从 PVC 请求到数据落盘：三层抽象的分工</text>
+
+  <rect x="60" y="70" width="160" height="60" rx="8" fill="#326CE5"/>
+  <text x="140" y="96" text-anchor="middle" font-size="13" font-weight="bold" fill="#ffffff">Pod</text>
+  <text x="140" y="114" text-anchor="middle" font-size="11" fill="#dbe7ff">volumes: 挂载 PVC</text>
+
+  <rect x="300" y="70" width="180" height="60" rx="8" fill="#E8F0FE" stroke="#326CE5"/>
+  <text x="390" y="96" text-anchor="middle" font-size="13" font-weight="bold" fill="#1b4aa8">PVC 持久卷声明</text>
+  <text x="390" y="114" text-anchor="middle" font-size="11" fill="#46586b">要多少、什么模式</text>
+
+  <rect x="560" y="70" width="240" height="60" rx="8" fill="#e2f4ea" stroke="#148a5c"/>
+  <text x="680" y="96" text-anchor="middle" font-size="13" font-weight="bold" fill="#148a5c">PV 持久卷</text>
+  <text x="680" y="114" text-anchor="middle" font-size="11" fill="#46586b">真实存储的集群级对象</text>
+
+  <rect x="560" y="190" width="240" height="60" rx="8" fill="#ffffff" stroke="#148a5c"/>
+  <text x="680" y="216" text-anchor="middle" font-size="13" font-weight="bold" fill="#148a5c">StorageClass</text>
+  <text x="680" y="234" text-anchor="middle" font-size="11" fill="#46586b">动态供给：谁来造卷、什么参数</text>
+
+  <line x1="220" y1="100" x2="296" y2="100" stroke="#7b8ca0" stroke-width="1.5" marker-end="url(#a)"/>
+  <line x1="480" y1="100" x2="556" y2="100" stroke="#7b8ca0" stroke-width="1.5" marker-end="url(#a)"/>
+  <text x="520" y="90" text-anchor="middle" font-size="10" fill="#7b8ca0">1:1 绑定</text>
+  <line x1="680" y1="190" x2="680" y2="134" stroke="#7b8ca0" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#a)"/>
+  <text x="720" y="166" text-anchor="middle" font-size="10" fill="#148a5c">自动创建 PV</text>
+
+  <rect x="60" y="190" width="400" height="150" rx="10" fill="#f5f8fc" stroke="#7b8ca0" stroke-dasharray="5 4"/>
+  <text x="260" y="216" text-anchor="middle" font-size="13" font-weight="bold" fill="#46586b">绑定规则（必考）</text>
+  <text x="260" y="242" text-anchor="middle" font-size="12" fill="#1c2733">accessModes：RWO / ROX / RWX</text>
+  <text x="260" y="266" text-anchor="middle" font-size="12" fill="#1c2733">capacity ≥ 申请量 · storageClassName 匹配</text>
+  <text x="260" y="290" text-anchor="middle" font-size="12" fill="#1c2733">reclaimPolicy：Retain（保留）/ Delete（删除）</text>
+  <text x="260" y="314" text-anchor="middle" font-size="12" fill="#c53030">PVC 删除后 PV 是否保留由回收策略决定</text>
+
+  <text x="430" y="376" text-anchor="middle" font-size="12" fill="#7b8ca0">Pod 与存储解耦：Pod 死了数据还在（PV），新 Pod 用同名 PVC 即可重新挂上</text>
+</svg>

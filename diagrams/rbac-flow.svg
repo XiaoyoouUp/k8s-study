@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 380" font-family="'PingFang SC','Microsoft YaHei',sans-serif">
+  <rect width="860" height="380" fill="#ffffff" rx="12"/>
+  <defs><marker id="a" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#7b8ca0"/></marker></defs>
+
+  <text x="430" y="34" text-anchor="middle" font-size="15" font-weight="bold" fill="#0d1b2e">RBAC 授权链：谁（Subject）能对什么（Resource）做什么（Verb）</text>
+
+  <rect x="50" y="70" width="180" height="70" rx="8" fill="#0d1b2e"/>
+  <text x="140" y="98" text-anchor="middle" font-size="13" font-weight="bold" fill="#ffffff">主体 Subject</text>
+  <text x="140" y="120" text-anchor="middle" font-size="11" fill="#9db8e6">User / Group / ServiceAccount</text>
+
+  <rect x="300" y="70" width="200" height="70" rx="8" fill="#326CE5"/>
+  <text x="400" y="98" text-anchor="middle" font-size="13" font-weight="bold" fill="#ffffff">RoleBinding</text>
+  <text x="400" y="120" text-anchor="middle" font-size="11" fill="#dbe7ff">把主体和角色绑在一起（带命名空间）</text>
+
+  <rect x="570" y="70" width="220" height="70" rx="8" fill="#ffffff" stroke="#326CE5"/>
+  <text x="680" y="98" text-anchor="middle" font-size="13" font-weight="bold" fill="#1b4aa8">Role（命名空间级）</text>
+  <text x="680" y="120" text-anchor="middle" font-size="11" fill="#46586b">rules: verbs + resources + apiGroups</text>
+
+  <rect x="570" y="200" width="220" height="70" rx="8" fill="#ffffff" stroke="#0d1b2e"/>
+  <text x="680" y="228" text-anchor="middle" font-size="13" font-weight="bold" fill="#0d1b2e">ClusterRole（集群级）</text>
+  <text x="680" y="250" text-anchor="middle" font-size="11" fill="#46586b">跨全部命名空间 / 集群资源（nodes、pv）</text>
+
+  <rect x="300" y="200" width="200" height="70" rx="8" fill="#dbe7ff" stroke="#326CE5"/>
+  <text x="400" y="228" text-anchor="middle" font-size="13" font-weight="bold" fill="#1b4aa8">ClusterRoleBinding</text>
+  <text x="400" y="250" text-anchor="middle" font-size="11" fill="#46586b">作用于整个集群</text>
+
+  <line x1="230" y1="105" x2="296" y2="105" stroke="#7b8ca0" stroke-width="1.5" marker-end="url(#a)"/>
+  <line x1="500" y1="105" x2="566" y2="105" stroke="#7b8ca0" stroke-width="1.5" marker-end="url(#a)"/>
+  <line x1="500" y1="235" x2="566" y2="235" stroke="#7b8ca0" stroke-width="1.5" marker-end="url(#a)"/>
+  <line x1="430" y1="140" x2="430" y2="196" stroke="#7b8ca0" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#a)"/>
+
+  <rect x="50" y="200" width="180" height="70" rx="8" fill="#f5f8fc" stroke="#148a5c"/>
+  <text x="140" y="228" text-anchor="middle" font-size="13" font-weight="bold" fill="#148a5c">效果</text>
+  <text x="140" y="250" text-anchor="middle" font-size="11" fill="#46586b">例：study-sa 可在 study 命名空间</text>
+  <text x="140" y="268" text-anchor="middle" font-size="11" fill="#46586b">get / list / watch pods</text>
+
+  <line x1="230" y1="235" x2="296" y2="235" stroke="#7b8ca0" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <text x="430" y="316" text-anchor="middle" font-size="12" fill="#7b8ca0">RBAC 是<strong>纯 additive（只加不加）</strong>的：拒绝靠"不授权"，没有 deny 规则</text>
+  <text x="430" y="344" text-anchor="middle" font-size="12" fill="#7b8ca0">组合矩阵：Role 可被 RoleBinding 或 ClusterRoleBinding 引用；ClusterRole 也可被 RoleBinding 引用（收敛到单命名空间）</text>
+</svg>

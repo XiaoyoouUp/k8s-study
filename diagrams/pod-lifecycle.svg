@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 380" font-family="'PingFang SC','Microsoft YaHei',sans-serif">
+  <rect width="860" height="380" fill="#ffffff" rx="12"/>
+  <defs><marker id="a" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#7b8ca0"/></marker></defs>
+
+  <text x="430" y="34" text-anchor="middle" font-size="15" font-weight="bold" fill="#0d1b2e">Pod 生命周期状态机</text>
+
+  <rect x="120" y="60" width="140" height="46" rx="8" fill="#fdf1e0" stroke="#a15c00"/>
+  <text x="190" y="88" text-anchor="middle" font-size="14" font-weight="bold" fill="#a15c00">Pending</text>
+  <text x="190" y="128" text-anchor="middle" font-size="11" fill="#7b8ca0">调度中 / 拉镜像中</text>
+
+  <rect x="360" y="60" width="140" height="46" rx="8" fill="#326CE5"/>
+  <text x="430" y="88" text-anchor="middle" font-size="14" font-weight="bold" fill="#ffffff">Running</text>
+  <text x="430" y="128" text-anchor="middle" font-size="11" fill="#7b8ca0">容器运行中（不一定就绪）</text>
+
+  <rect x="600" y="20" width="140" height="42" rx="8" fill="#e2f4ea" stroke="#148a5c"/>
+  <text x="670" y="46" text-anchor="middle" font-size="13" font-weight="bold" fill="#148a5c">Succeeded</text>
+  <rect x="600" y="106" width="140" height="42" rx="8" fill="#fdecec" stroke="#c53030"/>
+  <text x="670" y="132" text-anchor="middle" font-size="13" font-weight="bold" fill="#c53030">Failed</text>
+
+  <line x1="262" y1="83" x2="356" y2="83" stroke="#7b8ca0" stroke-width="1.5" marker-end="url(#a)"/>
+  <line x1="502" y1="72" x2="596" y2="46" stroke="#7b8ca0" stroke-width="1.5" marker-end="url(#a)"/>
+  <line x1="502" y1="96" x2="596" y2="122" stroke="#7b8ca0" stroke-width="1.5" marker-end="url(#a)"/>
+  <path d="M 430 108 C 430 160, 250 160, 205 110" fill="none" stroke="#c53030" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#a)"/>
+  <text x="318" y="172" text-anchor="middle" font-size="11" fill="#c53030">重启策略 restartPolicy 驱动重建容器</text>
+
+  <text x="430" y="216" text-anchor="middle" font-size="14" font-weight="bold" fill="#0d1b2e">三种探针（Probe）决定"健康"</text>
+  <rect x="70" y="236" width="230" height="112" rx="8" fill="#f5f8fc" stroke="#326CE5"/>
+  <text x="185" y="262" text-anchor="middle" font-size="13" font-weight="bold" fill="#1b4aa8">livenessProbe 存活探针</text>
+  <text x="185" y="284" text-anchor="middle" font-size="11" fill="#46586b">失败 → 重启容器</text>
+  <text x="185" y="302" text-anchor="middle" font-size="11" fill="#7b8ca0">用于检测死锁/僵死</text>
+  <rect x="315" y="236" width="230" height="112" rx="8" fill="#f5f8fc" stroke="#148a5c"/>
+  <text x="430" y="262" text-anchor="middle" font-size="13" font-weight="bold" fill="#148a5c">readinessProbe 就绪探针</text>
+  <text x="430" y="284" text-anchor="middle" font-size="11" fill="#46586b">失败 → 从 Service 摘除</text>
+  <text x="430" y="302" text-anchor="middle" font-size="11" fill="#7b8ca0">不重启，只是不接流量</text>
+  <rect x="560" y="236" width="230" height="112" rx="8" fill="#f5f8fc" stroke="#a15c00"/>
+  <text x="675" y="262" text-anchor="middle" font-size="13" font-weight="bold" fill="#a15c00">startupProbe 启动探针</text>
+  <text x="675" y="284" text-anchor="middle" font-size="11" fill="#46586b">启动完成前屏蔽另两个探针</text>
+  <text x="675" y="302" text-anchor="middle" font-size="11" fill="#7b8ca0">适合启动慢的应用</text>
+
+  <text x="430" y="368" text-anchor="middle" font-size="11" fill="#7b8ca0">探针方式：httpGet / tcpSocket / exec；关键参数：initialDelaySeconds、periodSeconds、failureThreshold</text>
+</svg>
