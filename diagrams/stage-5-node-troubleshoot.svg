@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 430" font-family="'PingFang SC','Microsoft YaHei',sans-serif">
+  <rect width="860" height="430" fill="#ffffff" rx="12"/>
+  <defs><marker id="a" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#7b8ca0"/></marker></defs>
+
+  <text x="430" y="34" text-anchor="middle" font-size="15" font-weight="bold" fill="#0d1b2e">节点 NotReady 排查路径</text>
+
+  <rect x="310" y="52" width="240" height="44" rx="8" fill="#c53030"/>
+  <text x="430" y="80" text-anchor="middle" font-size="13" font-weight="bold" fill="#ffffff">kubectl get nodes：worker-1 NotReady</text>
+
+  <rect x="30" y="140" width="180" height="160" rx="8" fill="#f5f8fc" stroke="#326CE5"/>
+  <text x="120" y="166" text-anchor="middle" font-size="13" font-weight="bold" fill="#1b4aa8">① describe node</text>
+  <text x="120" y="190" text-anchor="middle" font-size="11" fill="#46586b">Ready=False 的原因</text>
+  <text x="120" y="210" text-anchor="middle" font-size="11" fill="#46586b">Events 看失联起点</text>
+  <text x="120" y="232" text-anchor="middle" font-size="11" fill="#7b8ca0">kubectl describe node worker-1</text>
+
+  <rect x="240" y="140" width="180" height="160" rx="8" fill="#f5f8fc" stroke="#326CE5"/>
+  <text x="330" y="166" text-anchor="middle" font-size="13" font-weight="bold" fill="#1b4aa8">② kubelet 进程</text>
+  <text x="330" y="190" text-anchor="middle" font-size="11" fill="#46586b">systemctl status kubelet</text>
+  <text x="330" y="210" text-anchor="middle" font-size="11" fill="#46586b">active → 进程还活着</text>
+  <text x="330" y="232" text-anchor="middle" font-size="11" fill="#46586b">inactive → kubelet 挂了</text>
+
+  <rect x="450" y="140" width="180" height="160" rx="8" fill="#f5f8fc" stroke="#326CE5"/>
+  <text x="540" y="166" text-anchor="middle" font-size="13" font-weight="bold" fill="#1b4aa8">③ kubelet 日志</text>
+  <text x="540" y="190" text-anchor="middle" font-size="11" fill="#46586b">journalctl -u kubelet -n 100</text>
+  <text x="540" y="210" text-anchor="middle" font-size="11" fill="#46586b">报错直指根因：</text>
+  <text x="540" y="232" text-anchor="middle" font-size="11" fill="#46586b">证书过期 / swap / 运行时</text>
+
+  <rect x="660" y="140" width="180" height="160" rx="8" fill="#f5f8fc" stroke="#326CE5"/>
+  <text x="750" y="166" text-anchor="middle" font-size="13" font-weight="bold" fill="#1b4aa8">④ 运行时与 CNI</text>
+  <text x="750" y="190" text-anchor="middle" font-size="11" fill="#46586b">crictl ps 看 containerd</text>
+  <text x="750" y="210" text-anchor="middle" font-size="11" fill="#46586b">calico-node 是否 Running</text>
+  <text x="750" y="232" text-anchor="middle" font-size="11" fill="#46586b">CNI 断 → 节点失联</text>
+
+  <line x1="400" y1="96" x2="130" y2="136" stroke="#7b8ca0" stroke-width="1.5" marker-end="url(#a)"/>
+  <line x1="212" y1="220" x2="236" y2="220" stroke="#7b8ca0" stroke-width="1.5" marker-end="url(#a)"/>
+  <line x1="422" y1="220" x2="446" y2="220" stroke="#7b8ca0" stroke-width="1.5" marker-end="url(#a)"/>
+  <line x1="632" y1="220" x2="656" y2="220" stroke="#7b8ca0" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <rect x="30" y="340" width="810" height="50" rx="8" fill="#e2f4ea" stroke="#148a5c"/>
+  <text x="435" y="370" text-anchor="middle" font-size="12" fill="#1c2733">定位并修复后：kubectl uncordon worker-1 恢复调度（维护期间节点保持不可调度状态）</text>
+
+  <text x="430" y="414" text-anchor="middle" font-size="11" fill="#7b8ca0">常见根因：kubelet 停止 · containerd 故障 · 磁盘压力 · CNI 异常 · 证书过期</text>
+</svg>
