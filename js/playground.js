@@ -1,4 +1,5 @@
-/* 命令练习场：终端 UI + 内置任务校验 */
+/* 命令练习场：终端 UI + 内置任务校验。
+ * 布局：左侧终端（含当前任务横条），右侧固定侧栏 = 任务列表（可滚动/筛选）+ 判定结果。 */
 import { parseCommand } from './lib/parser.js';
 import { simulate } from './lib/mockcluster.js';
 import { checkCommand, TASKS } from './lib/tasks.js';
@@ -16,8 +17,10 @@ const LEVEL_NAME = { 1: '入门', 2: '进阶', 3: '挑战' };
 export function renderPlayground(el) {
   el.innerHTML = `
   <div class="fade-in">
-    <h1 style="margin:4px 0 8px">kubectl 命令练习场</h1>
-    <p style="color:var(--ink-2);margin:0 0 18px">输入命令并回车：右侧会先做<strong>语法与用法校验</strong>（错误会给出修正建议），语法通过后在<strong>模拟集群</strong>上执行并展示输出。选中一个任务后，练习场会判断你的命令是否满足任务要求。</p>
+    <h1 style="margin:4px 0 6px;font-size:24px">kubectl 命令练习场</h1>
+    <p style="color:var(--ink-2);margin:0 0 12px;font-size:14px">输入命令回车执行：先做<strong>语法与用法校验</strong>（错误给修正建议），再在<strong>模拟集群</strong>上返回输出。选中右侧任务后，会逐条判定命令是否满足要求。</p>
+    <div class="pg-chips"><span class="pg-chips-label">常用命令</span>${EXAMPLES.map((c) => `<button class="chip-btn pg-ex" type="button">${esc(c)}</button>`).join('')}</div>
+    <div class="pg-taskbar" id="pg-taskbar"><span>🎯 在右侧「练习任务」中选一个任务，判定引擎会检查你的命令是否满足要求。</span></div>
     <div class="pg-layout">
       <div class="terminal">
         <div class="term-bar">
@@ -29,21 +32,34 @@ export function renderPlayground(el) {
         <div class="term-input"><span class="ps">k8s@study:~$</span><input id="pg-in" type="text" spellcheck="false" autocomplete="off" placeholder="输入 kubectl 命令，回车执行…"></div>
       </div>
       <div class="pg-side">
-        <div class="card"><h3>常用命令（点击填入）</h3><div class="chips-row">${EXAMPLES.map((c) => `<button class="chip-btn pg-ex" type="button">${esc(c)}</button>`).join('')}</div></div>
-        <div class="card"><h3>练习任务 <span class="chip gray" id="pg-task-count"></span></h3><div id="pg-tasks"></div></div>
-        <div class="card" id="pg-verdict-card" style="display:none"><h3>任务判定</h3><div id="pg-verdict"></div></div>
+        <div class="card pg-verdict-card" id="pg-verdict-card" style="display:none">
+          <h3>任务判定</h3><div id="pg-verdict"></div>
+        </div>
+        <div class="card pg-tasks-card">
+          <h3>练习任务 <span class="chip gray" id="pg-task-count"></span>
+            <span class="pg-filter" id="pg-filter">
+              <button class="chip-btn active" data-lv="0">全部</button>
+              <button class="chip-btn" data-lv="1">入门</button>
+              <button class="chip-btn" data-lv="2">进阶</button>
+              <button class="chip-btn" data-lv="3">挑战</button>
+            </span>
+          </h3>
+          <div id="pg-tasks" class="pg-task-list"></div>
+        </div>
       </div>
     </div>
-    <div class="callout info" style="margin-top:22px"><div class="co-title">ℹ️ 关于模拟集群</div>
+    <div class="callout info" style="margin-top:20px"><div class="co-title">ℹ️ 关于模拟集群</div>
     <p>集群数据是固定的演示集（default / study / kube-system 三个命名空间）。读取类命令（get / describe / logs / top 等）返回模拟数据；变更类命令返回模拟确认信息，不会真实改变状态。解析器覆盖常用命令与旗标，未覆盖的高级用法会在课程中标注。</p></div>
   </div>`;
 
   const out = el.querySelector('#pg-out');
   const input = el.querySelector('#pg-in');
   const tasksEl = el.querySelector('#pg-tasks');
+  const taskbarEl = el.querySelector('#pg-taskbar');
   const verdictCard = el.querySelector('#pg-verdict-card');
   const verdictEl = el.querySelector('#pg-verdict');
   let activeTask = null;
+  let levelFilter = 0;
   const history = [];
   let hIdx = -1;
 
@@ -54,36 +70,43 @@ export function renderPlayground(el) {
 
   function print(text, tone = 'out') {
     const div = document.createElement('div');
-    div.className = 't-out';
-    if (tone === 'err') div.className = 't-err';
-    else if (tone === 'ok') div.className = 't-ok';
-    else if (tone === 'in') { div.className = 't-in'; div.textContent = text; out.appendChild(div); return; }
+    if (tone === 'in') { div.className = 't-in'; div.textContent = text; out.appendChild(div); out.scrollTop = out.scrollHeight; return; }
+    div.className = tone === 'err' ? 't-err' : tone === 'ok' ? 't-ok' : 't-out';
     div.textContent = text;
     out.appendChild(div);
     out.scrollTop = out.scrollHeight;
   }
 
+  function renderTaskbar() {
+    if (activeTask) {
+      taskbarEl.classList.add('active');
+      taskbarEl.innerHTML = `<span>🎯 <b>${esc(activeTask.title)}</b>　${esc(activeTask.desc)}</span><button class="chip-btn tb-cancel" type="button">取消选择</button>`;
+    } else {
+      taskbarEl.classList.remove('active');
+      taskbarEl.innerHTML = `<span>🎯 在右侧「练习任务」中选一个任务，判定引擎会检查你的命令是否满足要求。</span>`;
+    }
+  }
+
   function refreshTasks() {
+    const listTop = tasksEl.scrollTop;
     const done = TASKS.filter((t) => store.isTaskDone(t.id)).length;
     el.querySelector('#pg-task-count').textContent = `${done}/${TASKS.length}`;
-    tasksEl.innerHTML = TASKS.map((t) => {
+    const list = levelFilter ? TASKS.filter((t) => t.level === levelFilter) : TASKS;
+    tasksEl.innerHTML = list.map((t) => {
       const isDone = store.isTaskDone(t.id);
       const active = activeTask && activeTask.id === t.id;
       return `<div class="task-item ${active ? 'active' : ''} ${isDone ? 'done' : ''}" data-task="${t.id}">
         <span class="ti-status">${isDone ? '✅' : `<span class="chip ${t.level === 3 ? 'warn' : 'gray'}">${LEVEL_NAME[t.level]}</span>`}</span>
         <div class="ti-title">${esc(t.title)}</div><div class="ti-desc">${esc(t.desc)}</div></div>`;
-    }).join('');
+    }).join('') || '<p style="color:var(--ink-3);font-size:13px">该级别暂无任务</p>';
+    tasksEl.scrollTop = listTop;
   }
 
-  function solutionText(task) {
-  return Array.isArray(task.solution) ? task.solution.join('\n') : String(task.solution || '');
-}
-
-function showVerdict(task, result) {
+  function showVerdict(task, result) {
     verdictCard.style.display = '';
     const rows = result.checks.map((c) => `<li>${c.ok ? '✅' : '❌'} ${esc(c.label)}${c.detail && !c.ok ? ` — ${esc(c.detail)}` : ''}</li>`).join('');
     verdictEl.innerHTML = result.pass
-      ? `<div class="verdict pass"><div class="v-title">🎉 任务完成</div><ul>${rows}</ul>${task.solution ? `<details style="margin-top:8px"><summary>参考答案</summary><pre>${esc(solutionText(task))}</pre></details>` : ''}</div>`
+      ? `<div class="verdict pass"><div class="v-title">🎉 任务完成</div><ul>${rows}</ul>${task.solution ? `<details style="margin-top:8px"><summary>参考答案</summary><pre>${esc(Array.isArray(task.solution) ? task.solution.join('\n') : task.solution)}</pre></details>` : ''}</div>`
       : `<div class="verdict fail"><div class="v-title">未通过，逐条检查：</div><ul>${rows}</ul>${task.hint ? `<p style="margin:8px 0 0"><b>提示：</b>${esc(task.hint)}</p>` : ''}</div>`;
   }
 
@@ -94,8 +117,25 @@ function showVerdict(task, result) {
     activeTask = activeTask && activeTask.id === t.id ? null : t;
     if (activeTask) print(`已选择任务：${t.title} —— ${t.desc}`, 'out');
     verdictCard.style.display = 'none';
+    renderTaskbar();
     refreshTasks();
     input.focus();
+  });
+
+  el.querySelector('#pg-filter').addEventListener('click', (e) => {
+    const btn = e.target.closest('.chip-btn');
+    if (!btn) return;
+    levelFilter = Number(btn.dataset.lv);
+    el.querySelectorAll('#pg-filter .chip-btn').forEach((b) => b.classList.toggle('active', b === btn));
+    refreshTasks();
+  });
+
+  taskbarEl.addEventListener('click', (e) => {
+    if (!e.target.closest('.tb-cancel')) return;
+    activeTask = null;
+    verdictCard.style.display = 'none';
+    renderTaskbar();
+    refreshTasks();
   });
 
   function run(cmdLine) {
@@ -130,6 +170,7 @@ function showVerdict(task, result) {
   el.querySelector('#pg-clear').addEventListener('click', () => { out.innerHTML = ''; });
   el.querySelectorAll('.pg-ex').forEach((b) => b.addEventListener('click', () => { input.value = b.textContent; input.focus(); }));
 
+  renderTaskbar();
   refreshTasks();
   input.focus();
 }

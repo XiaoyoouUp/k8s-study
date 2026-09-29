@@ -372,11 +372,17 @@ export function simulate(cmdLine, parsed = {}) {
         ['configmaps', 'cm', 'v1', 'true', 'ConfigMap'], ['secrets', '', 'v1', 'true', 'Secret'],
         ['nodes', 'no', 'v1', 'false', 'Node'], ['namespaces', 'ns', 'v1', 'false', 'Namespace'],
       ]), tone: 'out' };
-    case 'config':
+    case 'config': {
+      if (parsed.sub === 'use-context') return { text: `Switched to context "${(parsed.resourceNames && parsed.resourceNames[0]) || '?'}".`, tone: 'ok' };
       return { text: renderTable(['CURRENT', 'NAME', 'CLUSTER', 'AUTHINFO', 'NAMESPACE'], [
         ['*', 'kubernetes-admin@kubernetes', 'kubernetes', 'kubernetes-admin', ''],
         ['', 'study-cluster', 'study-cluster', 'study-admin', 'study'],
       ]), tone: 'out' };
+    }
+    case 'api-versions':
+      return { text: ['v1', 'apps/v1', 'batch/v1', 'autoscaling/v2', 'networking.k8s.io/v1', 'storage.k8s.io/v1', 'rbac.authorization.k8s.io/v1', 'policy/v1'].join('\n'), tone: 'out' };
+    case 'auth':
+      return { text: parsed.sub === 'can-i' ? 'yes（模拟判定：真实集群以 RBAC 配置为准）' : '（模拟）', tone: 'ok' };
     case 'explain':
       return { text: `KIND:     Pod\nVERSION:  v1\n\n字段说明（模拟）……使用 kubectl explain <资源>.<字段> --recursive 可逐级查看。`, tone: 'out' };
     default:

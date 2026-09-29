@@ -1,5 +1,5 @@
 /* 内容集成校验：结构合法性 + 参考答案必须通过自己的 check 规约 + 图引用存在 */
-import { checkCommand } from '../js/lib/tasks.js';
+import { checkCommand, TASKS } from '../js/lib/tasks.js';
 import { parseCommand } from '../js/lib/parser.js';
 import { existsSync } from 'node:fs';
 
@@ -66,12 +66,27 @@ for (const e of exams) {
   }
 }
 
+/* 练习任务（tasks.js 的 TASKS） */
+for (const t of TASKS) {
+  chk(!ids.has(t.id), `[dup] task id ${t.id}`); ids.add(t.id);
+  for (const k of Object.keys(t.check || {})) chk(CHECK_FIELDS.includes(k), `[task] ${t.id} 非法 check 字段 ${k}`);
+  chk(t.solution && (typeof t.solution === 'string' || Array.isArray(t.solution)), `[task] ${t.id} 缺 solution`);
+  const sol = Array.isArray(t.solution) ? t.solution.join('\n') : t.solution;
+  const p = parseCommand(sol);
+  chk(p.ok, `[task] ${t.id} 参考答案解析失败："${sol}"`);
+  const r = checkCommand(sol, t.check || {});
+  if (!r.pass) {
+    const failed = r.checks.filter((c) => !c.ok).map((c) => c.label).join(' | ');
+    problems.push(`[task] ${t.id} 参考答案未通过自己的 check："${sol}" → ${failed}`);
+  }
+}
+
 /* 统计 */
 const lessonCount = stages.reduce((n, s) => n + s.lessons.length, 0);
 const quizCount = stages.reduce((n, s) => n + s.lessons.reduce((m, l) => m + (l.blocks || []).reduce((k, b) => k + (b.t === 'quiz' ? b.questions.length : 0), 0), 0), 0);
 const examQCount = exams.reduce((n, e) => n + (e.questions || []).length, 0);
 const examTCount = exams.reduce((n, e) => n + (e.tasks || []).length, 0);
-console.log(`阶段 ${stages.length}/6 · 课程 ${lessonCount} · 随堂题 ${quizCount} · 考试选择题 ${examQCount} · 实操题 ${examTCount}`);
+console.log(`阶段 ${stages.length}/6 · 课程 ${lessonCount} · 随堂题 ${quizCount} · 考试选择题 ${examQCount} · 实操题 ${examTCount} · 练习任务 ${TASKS.length}`);
 
 if (problems.length) {
   console.log('\n发现问题:');
