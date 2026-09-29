@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 380" font-family="'PingFang SC','Microsoft YaHei',sans-serif">
+  <rect width="860" height="380" fill="#ffffff" rx="12"/>
+  <defs><marker id="a" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#7b8ca0"/></marker></defs>
+
+  <text x="430" y="34" text-anchor="middle" font-size="15" font-weight="bold" fill="#0d1b2e">Pod 安全四道闸：镜像 → 准入 → Pod 级 → 容器级</text>
+
+  <rect x="50" y="56" width="760" height="62" rx="8" fill="#E8F0FE" stroke="#326CE5"/>
+  <text x="70" y="82" font-size="13" font-weight="bold" fill="#1b4aa8">① 镜像层（构建时）</text>
+  <text x="70" y="104" font-size="12" fill="#46586b">最小基础镜像 · 固定 tag / 摘要（禁 latest）· 漏洞扫描（trivy 等）· 私有仓库 + imagePullSecrets</text>
+
+  <line x1="430" y1="118" x2="430" y2="130" stroke="#7b8ca0" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <rect x="50" y="132" width="760" height="62" rx="8" fill="#0d1b2e"/>
+  <text x="70" y="158" font-size="13" font-weight="bold" fill="#ffffff">② 准入层（创建时）</text>
+  <text x="70" y="180" font-size="12" fill="#9db8e6">PodSecurity admission：privileged / baseline / restricted，按命名空间标签 enforce / audit / warn</text>
+
+  <line x1="430" y1="194" x2="430" y2="206" stroke="#7b8ca0" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <rect x="50" y="208" width="760" height="62" rx="8" fill="#ffffff" stroke="#326CE5"/>
+  <text x="70" y="234" font-size="13" font-weight="bold" fill="#1b4aa8">③ Pod 级 securityContext（对全部容器生效）</text>
+  <text x="70" y="256" font-size="12" fill="#46586b">runAsNonRoot · runAsUser / runAsGroup · fsGroup（给卷追加组权限，仅此字段只在 Pod 级）</text>
+
+  <line x1="430" y1="270" x2="430" y2="282" stroke="#7b8ca0" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <rect x="50" y="284" width="760" height="62" rx="8" fill="#ffffff" stroke="#148a5c"/>
+  <text x="70" y="310" font-size="13" font-weight="bold" fill="#148a5c">④ 容器级 securityContext（覆盖 Pod 级同名项）</text>
+  <text x="70" y="332" font-size="12" fill="#46586b">capabilities: drop ALL · allowPrivilegeEscalation: false · readOnlyRootFilesystem: true</text>
+
+  <text x="430" y="368" text-anchor="middle" font-size="12" fill="#7b8ca0">restricted ⊂ baseline ⊂ privileged：策略越严越安全，生产命名空间建议直接 enforce=restricted</text>
+</svg>

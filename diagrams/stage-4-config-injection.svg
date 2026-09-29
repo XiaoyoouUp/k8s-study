@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 420" font-family="'PingFang SC','Microsoft YaHei',sans-serif">
+  <rect width="860" height="420" fill="#ffffff" rx="12"/>
+  <defs><marker id="a" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#7b8ca0"/></marker></defs>
+
+  <text x="430" y="34" text-anchor="middle" font-size="15" font-weight="bold" fill="#0d1b2e">ConfigMap 的四条注入路径：形式不同，热更新行为不同</text>
+
+  <rect x="330" y="56" width="200" height="68" rx="8" fill="#0d1b2e"/>
+  <text x="430" y="84" text-anchor="middle" font-size="13" font-weight="bold" fill="#ffffff">ConfigMap app-config</text>
+  <text x="430" y="106" text-anchor="middle" font-size="11" fill="#9db8e6">LOG_LEVEL=debug · nginx.conf=…</text>
+
+  <rect x="36" y="170" width="186" height="86" rx="8" fill="#ffffff" stroke="#326CE5"/>
+  <text x="129" y="198" text-anchor="middle" font-size="13" font-weight="bold" fill="#1b4aa8">① env（valueFrom）</text>
+  <text x="129" y="222" text-anchor="middle" font-size="11" fill="#46586b">单 key → 环境变量 · 不热更新</text>
+
+  <rect x="246" y="170" width="186" height="86" rx="8" fill="#ffffff" stroke="#326CE5"/>
+  <text x="339" y="198" text-anchor="middle" font-size="13" font-weight="bold" fill="#1b4aa8">② envFrom</text>
+  <text x="339" y="222" text-anchor="middle" font-size="11" fill="#46586b">全部 key → 环境变量 · 不热更新</text>
+
+  <rect x="456" y="170" width="186" height="86" rx="8" fill="#ffffff" stroke="#148a5c"/>
+  <text x="549" y="198" text-anchor="middle" font-size="13" font-weight="bold" fill="#148a5c">③ 卷挂载（configMap）</text>
+  <text x="549" y="222" text-anchor="middle" font-size="11" fill="#46586b">key → 文件 · 自动热更新 ≈1 分钟</text>
+
+  <rect x="666" y="170" width="186" height="86" rx="8" fill="#ffffff" stroke="#7b8ca0"/>
+  <text x="759" y="198" text-anchor="middle" font-size="13" font-weight="bold" fill="#0d1b2e">④ subPath 挂载</text>
+  <text x="759" y="222" text-anchor="middle" font-size="11" fill="#46586b">单个 key → 单个文件 · 不热更新</text>
+
+  <line x1="410" y1="124" x2="135" y2="166" stroke="#7b8ca0" stroke-width="1.5" marker-end="url(#a)"/>
+  <line x1="422" y1="124" x2="345" y2="166" stroke="#7b8ca0" stroke-width="1.5" marker-end="url(#a)"/>
+  <line x1="438" y1="124" x2="543" y2="166" stroke="#7b8ca0" stroke-width="1.5" marker-end="url(#a)"/>
+  <line x1="450" y1="124" x2="753" y2="166" stroke="#7b8ca0" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <rect x="180" y="310" width="500" height="64" rx="8" fill="#E8F0FE" stroke="#326CE5"/>
+  <text x="430" y="336" text-anchor="middle" font-size="13" font-weight="bold" fill="#1b4aa8">Pod / 容器</text>
+  <text x="430" y="358" text-anchor="middle" font-size="11" fill="#46586b">环境变量 · 配置文件（由 kubelet 注入或写入）</text>
+
+  <line x1="129" y1="256" x2="240" y2="306" stroke="#7b8ca0" stroke-width="1.5" marker-end="url(#a)"/>
+  <line x1="339" y1="256" x2="340" y2="306" stroke="#7b8ca0" stroke-width="1.5" marker-end="url(#a)"/>
+  <line x1="549" y1="256" x2="540" y2="306" stroke="#7b8ca0" stroke-width="1.5" marker-end="url(#a)"/>
+  <line x1="759" y1="256" x2="620" y2="306" stroke="#7b8ca0" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <text x="430" y="402" text-anchor="middle" font-size="12" fill="#7b8ca0">修改 ConfigMap 不会触发滚动重启：env / envFrom / subPath 需重建 Pod，卷挂载由 kubelet 自动同步</text>
+</svg>
