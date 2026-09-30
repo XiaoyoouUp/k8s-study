@@ -45,7 +45,7 @@ function hlYamlLine(line) {
 
 function renderCode(b) {
   const head = `${b.file ? esc(b.file) : (b.lang === 'yaml' ? 'YAML' : 'bash')}`;
-  return `<div class="codeblock"><div class="cb-head"><span>${head}</span><button class="cb-copy" type="button">复制</button></div><pre><code>${highlight(b.code, b.lang)}</code></pre>${b.out ? `<div class="cb-out"><code>${highlight(b.out, 'bash')}</code></div>` : ''}</div>`;
+  return `<div class="codeblock"><div class="cb-head"><span>${head}</span><button class="cb-copy" type="button">复制</button></div><pre><code>${highlight(b.code, b.lang)}</code></pre>${b.out ? `<pre class="cb-out"><code>${esc(b.out)}</code></pre>` : ''}</div>`;
 }
 
 function renderDiagram(b) {

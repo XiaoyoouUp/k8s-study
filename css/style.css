@@ -178,8 +178,11 @@ a.card:hover { box-shadow: 0 8px 24px rgba(28,58,110,.12); transform: translateY
 .codeblock .tok-cm { color: #6b84a8; }
 .codeblock .tok-key { color: #7ec8ff; }
 .codeblock .tok-num { color: #f0a3c0; }
-.codeblock .cb-out { border-top: 1px dashed #27405f; margin: 0; padding: 10px 16px; overflow-x: auto; }
-.codeblock .cb-out code { display: block; white-space: pre; color: #9db8e6; }
+.codeblock .cb-out {
+  border-top: 1px dashed #27405f; margin: 0; padding: 12px 16px;
+  overflow-x: auto; background: #0b1524; border-radius: 0 0 var(--radius) var(--radius);
+}
+.codeblock .cb-out code { display: block; white-space: pre; color: #93aacd; font-size: 12.5px; }
 
 .callout { border-radius: var(--radius); padding: 13px 18px; margin: 16px 0; font-size: 14.2px; border: 1px solid; }
 .callout .co-title { font-weight: 700; display: flex; align-items: center; gap: 7px; margin-bottom: 3px; }
