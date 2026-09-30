@@ -2,7 +2,7 @@
 
 系统化学习 Kubernetes 的免费开源学习网站：**图文课程 + 随堂测验 + 阶段考试 + kubectl 在线命令练习**，全程对标 CNCF **CKA** 认证考纲。
 
-在线访问：**https://xiaoyoouup.github.io/k8s-study/**
+纯静态站点（原生 JS，无构建、无外部依赖），克隆后本地即可运行（见下）。
 
 ## 功能
 
