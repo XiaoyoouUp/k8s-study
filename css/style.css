@@ -124,6 +124,8 @@ a.card:hover { box-shadow: 0 8px 24px rgba(28,58,110,.12); transform: translateY
 .card h3 { margin: 2px 0 8px; font-size: 16.5px; display: flex; align-items: center; gap: 8px; }
 .card p { margin: 0; color: var(--ink-2); font-size: 13.8px; line-height: 1.65; }
 .card .meta { margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; }
+/* 卡片内的徽章允许换行，避免长文字溢出 */
+.card .meta .chip { white-space: normal; overflow-wrap: anywhere; }
 .section-title { display: flex; align-items: baseline; gap: 10px; margin: 34px 0 14px; }
 .section-title h2 { margin: 0; font-size: 20px; }
 .section-title .sub { color: var(--ink-3); font-size: 13px; }
@@ -368,7 +370,18 @@ details.solution pre { background: var(--code-bg); color: var(--code-ink); borde
 .lesson-row.done .lr-no { background: var(--ok-bg); color: var(--ok); }
 
 /* ---------- 速查表 ---------- */
-.ref-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+.ref-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 16px; }
+.ref-list { display: flex; flex-direction: column; }
+.ref-item { display: flex; gap: 10px; align-items: flex-start; padding: 9px 0; border-bottom: 1px dashed var(--line); }
+.ref-item:last-child { border-bottom: none; }
+.ref-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.ref-cmd {
+  font-family: var(--mono); font-size: 12.3px; color: #1b4aa8; background: #eef2f9;
+  border: 1px solid #e0e7f2; border-radius: 6px; padding: 3px 8px;
+  white-space: normal; word-break: break-all; line-height: 1.6;
+}
+.ref-desc { font-size: 12.6px; color: var(--ink-2); line-height: 1.55; }
+.ref-try { flex: 0 0 auto; }
 
 mark.hl { background: #fff3bf; padding: 0 3px; border-radius: 3px; }
 .fade-in { animation: fadein .25s ease; }

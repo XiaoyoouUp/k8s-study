@@ -371,14 +371,21 @@ function pageReference() {
   content.innerHTML = `
   <div class="fade-in">
     <h1 style="margin:4px 0 8px">kubectl 命令速查表</h1>
-    <p style="color:var(--ink-2);margin:0 0 18px">按场景分类的常用命令与考试加速技巧。点击任意命令可复制；「试」按钮直接在练习场执行。</p>
+    <p style="color:var(--ink-2);margin:0 0 18px">按场景分类的常用命令与考试加速技巧。「试」按钮直接在练习场执行。</p>
     <div class="ref-grid">
       ${REF_SECTIONS.map((s) => `
       <div class="card">
         <h3>${s.icon} ${esc(s.title)}</h3>
-        <div class="tablewrap"><table class="tb" style="font-size:12.8px">
-          ${s.items.map((it) => `<tr><td style="white-space:nowrap"><code>${esc(it.cmd)}</code></td><td style="min-width:180px">${esc(it.desc)}</td><td style="width:30px"><button class="chip-btn ref-try" data-cmd="${esc(it.cmd)}" title="去练习场执行">试</button></td></tr>`).join('')}
-        </table></div>
+        <div class="ref-list">
+          ${s.items.map((it) => `
+          <div class="ref-item">
+            <div class="ref-main">
+              <code class="ref-cmd">${esc(it.cmd)}</code>
+              <span class="ref-desc">${esc(it.desc)}</span>
+            </div>
+            <button class="chip-btn ref-try" data-cmd="${esc(it.cmd)}" title="去练习场执行">试</button>
+          </div>`).join('')}
+        </div>
       </div>`).join('')}
     </div>
     <div class="callout cka" style="margin-top:24px"><div class="co-title">🎯 CKA 实战提醒</div>

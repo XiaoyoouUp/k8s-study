@@ -119,7 +119,7 @@ export function renderPlayground(el) {
     verdictCard.style.display = 'none';
     renderTaskbar();
     refreshTasks();
-    input.focus();
+    input.focus({ preventScroll: true });
   });
 
   el.querySelector('#pg-filter').addEventListener('click', (e) => {
@@ -168,9 +168,9 @@ export function renderPlayground(el) {
     else if (e.key === 'ArrowDown') { if (hIdx > 0) { hIdx--; input.value = history[hIdx]; e.preventDefault(); } else { hIdx = -1; input.value = ''; } }
   });
   el.querySelector('#pg-clear').addEventListener('click', () => { out.innerHTML = ''; });
-  el.querySelectorAll('.pg-ex').forEach((b) => b.addEventListener('click', () => { input.value = b.textContent; input.focus(); }));
+  el.querySelectorAll('.pg-ex').forEach((b) => b.addEventListener('click', () => { input.value = b.textContent; input.focus({ preventScroll: true }); }));
 
   renderTaskbar();
   refreshTasks();
-  input.focus();
+  input.focus({ preventScroll: true });
 }
