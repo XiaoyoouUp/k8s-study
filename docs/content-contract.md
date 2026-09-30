@@ -1,5 +1,8 @@
 # K8s 学练营 · 课程内容契约（生成课程/考试数据必须严格遵守）
 
+> 任何课程/考试数据改动，提交前必须通过：`node scripts/validate_content.mjs`
+> 校验器强制本文档的硬性规则（id 唯一、答案下标、图引用存在、实操题参考答案必须通过自己的 check 规约）。改数据结构的步骤见 [development.md](development.md)。
+
 ## 文件与模块形式
 - 课程：`data/stages/sN.js`，导出 `export const stage = {...}`
 - 考试：`data/exams/examN.js`，导出 `export const exam = {...}`

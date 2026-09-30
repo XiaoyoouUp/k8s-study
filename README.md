@@ -6,11 +6,12 @@
 
 ## 功能
 
-- 📚 **6 个学习阶段**（约 26 课）：基础入门 → 工作负载 → 网络与存储 → 配置与安全 → 运维与排障 → CKA 认证冲刺，每课配原创 SVG 图解、命令示例（含输出）、随堂测验
-- ⌨️ **命令练习场**：浏览器内的 kubectl 终端。命令解析器对动词、资源类型、旗标、取值做语法与用法校验（错误给出修正建议）；内置模拟集群展示 get/describe/logs/top 等输出；24 个练习任务逐条判定正确性
-- 📝 **考试系统**：6 个阶段结业考试 + CKA 全真模拟考试（限时倒计时、实操任务在线校验、逐题解析、成绩存档）
-- 📄 **命令速查表**：按场景分类 + CKA 考试加速技巧（`--dry-run=client -o yaml` 等）
+- 📚 **6 个学习阶段 · 27 课**：基础入门 → 工作负载 → 服务网络与存储 → 配置管理与安全 → 集群运维与故障排查 → CKA 认证冲刺。每课配原创 SVG 图解（共 22 张）、带模拟输出的命令示例、随堂测验（142 题）
+- ⌨️ **命令练习场**：浏览器内的 kubectl 终端。命令解析器对动词、资源类型、旗标、取值做语法与用法校验（错误给修正建议）；内置模拟集群展示 get/describe/logs/top 等输出；**53 个练习任务**按 入门/进阶/挑战 分级，逐条判定命令正确性
+- 📝 **考试系统**：6 个阶段结业考试 + CKA 全真模拟考试（共 94 道选择/判断题 + 22 道实操任务），限时倒计时、实操任务在线校验、逐题解析、成绩存档
+- 📄 **命令速查表**：11 个场景分类 + CKA 考试加速技巧（`--dry-run=client -o yaml` 等），可一键送入练习场
 - 📊 **进度追踪**：课程完成度、测验与考试成绩保存在浏览器 localStorage
+- 🖥️ **阅读体验**：内容区宽度三档可调（标准/宽/全宽）、移动端适配
 
 纯静态站点（原生 JS，无构建、无外部依赖），克隆即用。
 
@@ -20,18 +21,25 @@
 git clone https://github.com/XiaoyoouUp/k8s-study.git
 cd k8s-study
 npx serve .          # 或 python -m http.server 8080
-# 打开 http://localhost:3000（serve）或 http://localhost:8080（python）
 ```
 
 > 必须通过 HTTP 访问（ES 模块限制），不能直接双击 index.html。
 
-## 测试
-
-命令解析器 / 任务判定 / 模拟集群均有单元测试（TDD 开发）：
+## 测试（三层）
 
 ```bash
-npm test
+npm test                              # 1. 单元测试：解析器/任务判定/模拟集群（85 用例）
+node scripts/validate_content.mjs     # 2. 内容校验：课程/考试/任务数据合法性与自洽性
+npx serve -l 8080 . &                 # 3. 浏览器回归（需先起服务 + playwright）
+python scripts/full_regression.py     #    爬全部页面：渲染/图/考试流程/零 JS 错误
 ```
+
+## 文档
+
+| 文档 | 内容 |
+|---|---|
+| [docs/development.md](docs/development.md) | **开发指南**：架构、常见改动步骤（加课/加题/扩展解析器）、测试与发布流程、排障 |
+| [docs/content-contract.md](docs/content-contract.md) | 课程数据契约：block 类型、题目与考试结构、图库清单、语言风格 |
 
 ## 目录结构
 
@@ -45,22 +53,17 @@ js/
   playground.js       命令练习场 UI
   store.js            进度存储
   data.js             数据注册表
-  lib/parser.js       kubectl 命令解析器（核心）
+  lib/parser.js       kubectl 命令解析器（核心，TDD）
   lib/mockcluster.js  模拟集群
-  lib/tasks.js        任务判定与内置任务
+  lib/tasks.js        任务判定引擎 + 内置任务
 data/
   stages/s1..s6.js    阶段课程数据
   exams/*.js          阶段考试与 CKA 模拟考
   reference.js        速查表数据
-diagrams/*.svg        原创图解
-docs/content-contract.md  课程数据契约
+diagrams/*.svg        原创图解（22 张）
+docs/                 开发指南与内容契约
+scripts/              测试与校验脚本
 ```
-
-## 路线图
-
-- [ ] 练习场支持可变更的模拟集群（apply/scale 后状态真实变化）
-- [ ] CKAD / CKS 专项题库
-- [ ] 错题本与间隔复习
 
 ## 声明
 
