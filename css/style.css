@@ -81,10 +81,19 @@ body {
 #menu-btn { display: none; background: none; border: 1px solid var(--line); border-radius: 8px; padding: 4px 10px; font-size: 16px; cursor: pointer; }
 #breadcrumb { font-size: 13.5px; color: var(--ink-3); }
 #breadcrumb b { color: var(--ink-2); font-weight: 600; }
+#topbar-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
 .exam-badge {
-  margin-left: auto; font-size: 12px; font-weight: 700; color: var(--k8s-blue);
+  font-size: 12px; font-weight: 700; color: var(--k8s-blue);
   background: var(--k8s-blue-light); border: 1px solid #c6d9fa; padding: 3px 12px; border-radius: 999px;
 }
+/* 内容区宽度调节：默认标准 1020px，可切宽/全宽（app.js 持久化到 localStorage） */
+.width-ctrl { display: flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: #fff; }
+.width-ctrl button { border: none; background: transparent; padding: 4px 11px; font-size: 12px; color: var(--ink-3); cursor: pointer; font-family: var(--sans); }
+.width-ctrl button + button { border-left: 1px solid var(--line); }
+.width-ctrl button:hover { color: var(--k8s-blue-dark); background: var(--k8s-blue-light); }
+.width-ctrl button.active { background: var(--k8s-blue-light); color: var(--k8s-blue-dark); font-weight: 700; }
+#main-wrap.w-wide #content { max-width: 1400px; }
+#main-wrap.w-full #content { max-width: none; }
 #content { flex: 1; padding: 28px clamp(18px, 4vw, 48px) 60px; max-width: 1020px; width: 100%; margin: 0 auto; }
 #content:focus { outline: none; }
 #footer { padding: 18px 26px; border-top: 1px solid var(--line); color: var(--ink-3); font-size: 12.5px; text-align: center; background: #fff; }

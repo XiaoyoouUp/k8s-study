@@ -22,7 +22,14 @@
       <header id="topbar">
         <button id="menu-btn" aria-label="打开导航">☰</button>
         <div id="breadcrumb"></div>
-        <div id="topbar-right"><span class="exam-badge" title="对标 CNCF CKA 考纲">CKA 备考</span></div>
+        <div id="topbar-right">
+          <div class="width-ctrl" id="width-ctrl" title="调整内容区宽度">
+            <button data-w="narrow" type="button">标准</button>
+            <button data-w="wide" type="button">宽</button>
+            <button data-w="full" type="button">全宽</button>
+          </div>
+          <span class="exam-badge" title="对标 CNCF CKA 考纲">CKA 备考</span>
+        </div>
       </header>
       <main id="content" tabindex="-1"></main>
       <footer id="footer">

@@ -417,6 +417,23 @@ window.addEventListener('hashchange', route);
 document.getElementById('menu-btn').addEventListener('click', () => {
   document.getElementById('sidebar').classList.toggle('open');
 });
+
+/* 内容区宽度调节（标准 / 宽 / 全宽），选择持久化 */
+const WKEY = 'k8s-study-width';
+function applyWidth(w) {
+  const wrap = document.getElementById('main-wrap');
+  wrap.classList.toggle('w-wide', w === 'wide');
+  wrap.classList.toggle('w-full', w === 'full');
+  document.querySelectorAll('#width-ctrl button').forEach((b) => b.classList.toggle('active', b.dataset.w === w));
+  try { localStorage.setItem(WKEY, w); } catch { /* 忽略 */ }
+}
+document.getElementById('width-ctrl').addEventListener('click', (e) => {
+  const btn = e.target.closest('button');
+  if (btn) applyWidth(btn.dataset.w);
+});
+let savedWidth = 'narrow';
+try { savedWidth = localStorage.getItem(WKEY) || 'narrow'; } catch { /* 忽略 */ }
+applyWidth(savedWidth);
 route();
 
 /* 从速查表带命令进入练习场 */
