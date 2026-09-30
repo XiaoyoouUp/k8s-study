@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 640" font-family="'PingFang SC','Microsoft YaHei',sans-serif">
+  <defs>
+    <marker id="a" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#7b8ca0"/></marker>
+    <marker id="ab" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#326CE5"/></marker>
+    <marker id="ag" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#148a5c"/></marker>
+  </defs>
+  <rect width="860" height="640" fill="#ffffff" rx="12"/>
+  <text x="430" y="30" text-anchor="middle" font-size="15" font-weight="bold" fill="#0d1b2e">一次 kubectl create 的完整生命周期（按时间顺序动态演示）</text>
+
+  <!-- 泳道头部 -->
+  <rect x="30" y="50" width="110" height="44" rx="8" fill="#0d1b2e"/>
+  <text x="85" y="70" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#ffffff">kubectl</text>
+  <text x="85" y="86" text-anchor="middle" font-size="9.5" fill="#9db8e6">客户端</text>
+
+  <rect x="215" y="50" width="150" height="44" rx="8" fill="#326CE5"/>
+  <text x="290" y="70" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#ffffff">kube-apiserver</text>
+  <text x="290" y="86" text-anchor="middle" font-size="9.5" fill="#dbe7ff">唯一入口 · 唯一读写 etcd</text>
+
+  <rect x="420" y="50" width="130" height="44" rx="8" fill="#148a5c"/>
+  <text x="485" y="70" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#ffffff">controller-manager</text>
+  <text x="485" y="86" text-anchor="middle" font-size="9.5" fill="#d7f0e3">控制器集合</text>
+
+  <rect x="585" y="50" width="115" height="44" rx="8" fill="#a15c00"/>
+  <text x="642" y="70" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#ffffff">kube-scheduler</text>
+  <text x="642" y="86" text-anchor="middle" font-size="9.5" fill="#fdf1e0">调度器</text>
+
+  <rect x="735" y="50" width="105" height="44" rx="8" fill="#5b3fa8"/>
+  <text x="787" y="70" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#ffffff">kubelet</text>
+  <text x="787" y="86" text-anchor="middle" font-size="9.5" fill="#e6dcf7">节点代理</text>
+
+  <!-- 泳道生命线 -->
+  <line x1="85" y1="94" x2="85" y2="540" stroke="#d5dde8" stroke-width="1.5"/>
+  <line x1="290" y1="94" x2="290" y2="560" stroke="#d5dde8" stroke-width="1.5"/>
+  <line x1="485" y1="94" x2="485" y2="540" stroke="#d5dde8" stroke-width="1.5"/>
+  <line x1="642" y1="94" x2="642" y2="540" stroke="#d5dde8" stroke-width="1.5"/>
+  <line x1="787" y1="94" x2="787" y2="540" stroke="#d5dde8" stroke-width="1.5"/>
+
+  <!-- 常驻 List-Watch 长连接（脉动） -->
+  <g opacity="0">
+    <line x1="290" y1="120" x2="485" y2="120" stroke="#148a5c" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#ag)"/>
+    <text x="387" y="114" text-anchor="middle" font-size="10" fill="#148a5c">watch：Deployments / ReplicaSets / Pods</text>
+  </g>
+  <g opacity="0">
+    <line x1="290" y1="146" x2="642" y2="146" stroke="#148a5c" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#ag)"/>
+    <text x="466" y="140" text-anchor="middle" font-size="10" fill="#148a5c">watch：待调度 Pod（spec.nodeName 为空）</text>
+  </g>
+  <g opacity="0">
+    <line x1="290" y1="172" x2="787" y2="172" stroke="#148a5c" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#ag)"/>
+    <text x="538" y="166" text-anchor="middle" font-size="10" fill="#148a5c">watch：本节点 Pod（fieldSelector=spec.nodeName）</text>
+  </g>
+  <g opacity="0">
+    <text x="485" y="196" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#148a5c">▲ List-Watch：与 apiserver 的常驻长连接（先 List 全量 + resourceVersion，再 Watch 增量事件）</text>
+    <animate attributeName="opacity" from="0" to="1" begin="0.4s" dur="0.4s" fill="freeze"/>
+  </g>
+  <g opacity="0">
+    <animate attributeName="opacity" values="0.4;1;0.4" dur="2.2s" begin="1s" repeatCount="indefinite"/>
+    <line x1="290" y1="120" x2="485" y2="120" stroke="#148a5c" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#ag)"/>
+    <line x1="290" y1="146" x2="642" y2="146" stroke="#148a5c" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#ag)"/>
+    <line x1="290" y1="172" x2="787" y2="172" stroke="#148a5c" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#ag)"/>
+  </g>
+
+  <!-- ① kubectl → apiserver -->
+  <g opacity="0">
+    <line x1="85" y1="238" x2="286" y2="238" stroke="#326CE5" stroke-width="2" marker-end="url(#ab)"/>
+    <text x="185" y="230" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#1b4aa8">① HTTPS 请求</text>
+    <text x="185" y="254" text-anchor="middle" font-size="9.5" fill="#46586b">POST /apis/apps/v1/deployments</text>
+    <text x="185" y="268" text-anchor="middle" font-size="9.5" fill="#46586b">（认证 → 鉴权 → 准入控制）</text>
+    <animate attributeName="opacity" from="0" to="1" begin="1.6s" dur="0.4s" fill="freeze"/>
+  </g>
+
+  <!-- ② apiserver → etcd -->
+  <g opacity="0">
+    <rect x="225" y="560" width="130" height="40" rx="8" fill="#0d1b2e"/>
+    <text x="290" y="578" text-anchor="middle" font-size="12" font-weight="bold" fill="#ffffff">etcd</text>
+    <text x="290" y="594" text-anchor="middle" font-size="9" fill="#9db8e6">唯一持久层（键值库）</text>
+    <line x1="290" y1="524" x2="290" y2="556" stroke="#326CE5" stroke-width="2" marker-end="url(#ab)"/>
+    <text x="300" y="546" font-size="10" font-weight="bold" fill="#1b4aa8">② 写入 etcd</text>
+    <animate attributeName="opacity" from="0" to="1" begin="2.6s" dur="0.4s" fill="freeze"/>
+  </g>
+
+  <!-- ③ controller 收到事件 → 写回 Pod -->
+  <g opacity="0">
+    <line x1="485" y1="320" x2="294" y2="320" stroke="#148a5c" stroke-width="2" marker-end="url(#ag)"/>
+    <text x="390" y="312" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#148a5c">③ watch 到变更 → 创建 Pod 对象（写回 apiserver）</text>
+    <text x="390" y="336" text-anchor="middle" font-size="9.5" fill="#46586b">Deployment 控制器：期望 1 副本 / 实际 0 个；此刻 Pod 不带 nodeName，等待调度</text>
+    <animate attributeName="opacity" from="0" to="1" begin="3.8s" dur="0.4s" fill="freeze"/>
+  </g>
+
+  <!-- ④ scheduler 打分 → 写回绑定 -->
+  <g opacity="0">
+    <line x1="642" y1="388" x2="294" y2="388" stroke="#a15c00" stroke-width="2" marker-end="url(#ab)"/>
+    <text x="468" y="380" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#a15c00">④ 预选过滤 + 优选打分 → 写回绑定结果</text>
+    <text x="468" y="404" text-anchor="middle" font-size="9.5" fill="#46586b">spec.nodeName = worker-1（仍由 apiserver 写入 etcd）</text>
+    <animate attributeName="opacity" from="0" to="1" begin="5.2s" dur="0.4s" fill="freeze"/>
+  </g>
+
+  <!-- ⑤ kubelet 本地动作 + 上报 -->
+  <g opacity="0">
+    <text x="787" y="450" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#5b3fa8">⑤ watch 到本节点新 Pod</text>
+    <text x="787" y="466" text-anchor="middle" font-size="9.5" fill="#46586b">调用容器运行时（containerd）</text>
+    <text x="787" y="480" text-anchor="middle" font-size="9.5" fill="#46586b">拉镜像 → 启动容器</text>
+    <line x1="787" y1="492" x2="294" y2="492" stroke="#5b3fa8" stroke-width="2" marker-end="url(#ab)"/>
+    <text x="540" y="486" text-anchor="middle" font-size="10" font-weight="bold" fill="#5b3fa8">上报 Pod 状态（Status 写回 apiserver）</text>
+    <animate attributeName="opacity" from="0" to="1" begin="6.6s" dur="0.4s" fill="freeze"/>
+  </g>
+
+  <!-- ⑥ kube-proxy 注脚 -->
+  <g opacity="0">
+    <text x="430" y="530" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#46586b">⑥ kube-proxy 同样经 watch 获知 Service/Pod 变化 → 同步各节点转发规则，流量才能到达新 Pod</text>
+    <animate attributeName="opacity" from="0" to="1" begin="7.8s" dur="0.4s" fill="freeze"/>
+  </g>
+
+  <rect x="30" y="612" width="810" height="0" fill="none"/>
+  <text x="430" y="626" text-anchor="middle" font-size="11" font-weight="bold" fill="#c53030">所有组件只与 apiserver 通信；etcd 仅由 apiserver 读写。watch 不是读 etcd，而是 apiserver 推送的事件流。</text>
+</svg>

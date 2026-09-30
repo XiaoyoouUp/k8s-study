@@ -86,6 +86,7 @@ export const exam = {
 | 文件 | 内容 |
 |---|---|
 | containers-vs-vms.svg | 虚拟机与容器架构分层对比 |
+| request-lifecycle.svg | 动态图（SMIL）：kubectl create 生命周期，组件经 List-Watch 与 apiserver 交互 |
 | architecture.svg | 集群架构：控制平面四组件 + 两个 worker（kubelet/kube-proxy/pod） |
 | api-object-model.svg | 声明式 API 对象模型：期望状态 vs 实际状态，控制循环 |
 | pod-lifecycle.svg | Pod 生命周期状态机与三种探针 |
