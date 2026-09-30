@@ -20,7 +20,7 @@
 ```bash
 git clone https://github.com/XiaoyoouUp/k8s-study.git
 cd k8s-study
-npx serve .          # 或 python -m http.server 8080
+./serve.sh           # macOS/Linux；Windows 用 serve.cmd 或 npx serve .
 ```
 
 > 必须通过 HTTP 访问（ES 模块限制），不能直接双击 index.html。
